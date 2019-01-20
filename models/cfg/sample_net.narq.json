@@ -1,0 +1,168 @@
+{
+	"name"           : "sample_net",
+
+
+	"hyperparameters": {
+
+		"num_output_classes": 5,
+		"learning_rate"     : 0.0001,
+
+		"dropout"           : true,
+		"dropout_rate"      : 0.8,
+
+		"l2_regularization" : true,
+		"l2_penalty"        : 0.01,
+
+		"dqn_tau"           : 0.01
+	},
+
+
+	"subnets"        : [
+		{
+			"name"  : "scene_net",
+
+			"layers": [
+				{
+					"type"       : "inpt",
+					"name"       : "input",
+
+					"shape"      : [null, 144, 255, 3],
+					"var type"   : "float32"
+				},
+				{
+					"type"        : "conv",
+					"name"        : "conv_1",
+					"kernel size" : 7,
+					"filters"     : 3,
+					"activation"  : "relu",
+					"padding"     : "VALID",
+					"stride"      : [2, 2, 2, 2],
+					"pooling"     : "max",
+					"pool ksize"  : [1, 2, 2, 1],
+					"pool stride" : [1, 2, 2, 1],
+					"pool padding": "VALID"
+				},
+				{
+					"type"        : "conv",
+					"name"        : "conv_2",
+					"kernel size" : 5,
+					"filters"     : 5,
+					"activation"  : "relu",
+					"padding"     : "VALID",
+					"stride"      : [2, 2, 2, 2],
+					"pooling"     : "max",
+					"pool ksize"  : [1, 2, 2, 1],
+					"pool stride" : [1, 2, 2, 1],
+					"pool padding": "VALID"
+				}
+				,
+				{
+					"type"        : "conv",
+					"name"        : "conv_3",
+					"kernel size" : 5,
+					"filters"     : 5,
+					"activation"  : "relu",
+					"padding"     : "VALID",
+					"stride"      : [2, 2, 2, 2],
+					"pooling"     : "max",
+					"pool ksize"  : [1, 2, 2, 1],
+					"pool stride" : [1, 2, 2, 1],
+					"pool padding": "VALID"
+				},
+				{
+					"type"        : "flat",
+					"name"        : "flat_1"
+				}
+			]
+		},
+		{
+			"name"  : "sensor_net",
+			"layers": [
+				{
+					"type"       : "inpt",
+					"name"       : "input",
+
+					"shape"		 : [null, 6],
+					"var type"   : "float32"
+				},
+				{
+					"type"        : "fuco",
+					"name"        : "fcl_1",
+
+					"units"       : 20,
+					"activation"  : "relu"
+				}
+			]
+		}
+	],
+
+
+	"output_subnet"  : {
+
+		"name" : "output",
+
+		"layers" : [
+			{
+				"type"        : "ccat",
+				"name"        : "concat_1",
+
+				"axis"        : 1
+			},
+			{
+				"type"        : "rshp",
+				"name"        : "reshape_1",
+
+				"shape"       : [64, 1, 2, 3, -1]
+			},
+			{
+				"type"        : "ustk",
+				"name"        : "unstack_1",
+
+				"axis"       : 3
+			},
+			{
+				"type"        : "stck",
+				"name"        : "stack_1",
+
+				"axis"        : 3
+			},
+			{
+				"type"        : "flat",
+				"name"        : "flat_2"
+			},
+			{
+				"type"        : "rshp",
+				"name"        : "reshape_2",
+
+				"shape"       : [-1, 5, 30]
+			},
+			{
+				"type"        : "ustk",
+				"name"        : "unstack_2",
+
+				"axis"       : 1
+			},
+			{
+				"type"        : "lstm",
+				"name"        : "lstm_1",
+
+				"units"       : 20
+			},
+			{
+				"type"        : "fuco",
+				"name"        : "o_fclo_1",
+
+				"units"     : 20,
+				"activation": "relu"
+			},
+			{
+				"type"        : "fuco",
+				"name"        : "o_fcl_2",
+
+				"units"     : 20,
+				"activation": "relu"
+			}
+		]
+	}
+}
+

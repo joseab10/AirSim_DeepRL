@@ -1,11 +1,13 @@
 import subprocess
+
 from os import path
-import airsim
 from time import sleep
 from enum import Enum
 from typing import Union
 
-from AirSim_Settings import AirSim_Settings
+import airsim
+
+from as_settings import AS_Settings
 
 class Environments(Enum):
     Blocks       = 0
@@ -14,15 +16,15 @@ class Environments(Enum):
 
 
 
-class Environment:
+class AS_Environment:
 
     def __init__(self, env:Environments=Environments.Maze , env_path:str='env', drone:bool=True,
-                 settings_path = None,
-                 stepped_simulation:bool=True, step_duration=0.5,
+                 settings_path:str=None,
+                 stepped_simulation:bool=True, step_duration:float=0.5,
                  manual_mode:bool=False, joystick:Union[int,None]=0,
-                 rendering:bool=True, lowres:bool=True, windowed:bool=True):
+                 rendering:bool=True, lowres:bool=True):
 
-        self.settings = AirSim_Settings(settings_path)
+        self.settings = AS_Settings(settings_path)
 
         environments = {
             Environments.Blocks      : {'subfolder': ''        , 'bin': ''},
@@ -75,9 +77,9 @@ class Environment:
         self.settings.set(vehicle_settings_path + 'AllowAPIAlways', self.manual_mode)
 
 
+        self.process_args['windowed'] =''
 
-        if windowed:
-            self.process_args['windowed'] =''
+
         if lowres:
             self.process_args['ResX'] = 640
             self.process_args['ResY'] = 480
@@ -89,15 +91,11 @@ class Environment:
         self.settings.dump()
 
 
-
-
-
-
-    def reset(self, restart=False, starting_position=(0, 0, 0)):
-        if restart:
+    def reset(self, hard_reset=False, starting_position=(0, 0, 0)):
+        if hard_reset:
             self.kill()
 
-        if not self._env_running() or restart:
+        if not self._env_running() or hard_reset:
             self._start()
             sleep(20)
             self.client.confirmConnection()
@@ -185,9 +183,9 @@ class Environment:
 # Class Tests
 if __name__ == '__main__':
 
-    env_path = path.join('..', 'env')
+    env_path = path.join('..', '..', '..', 'env')
 
-    env = Environment(env=Environments.Maze, env_path=env_path)
+    env = AS_Environment(env=Environments.Maze, env_path=env_path)
 
     max_episodes = 3
     max_steps = 100

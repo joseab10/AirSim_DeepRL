@@ -2,7 +2,7 @@ import json
 from os import path, getenv
 from platform import system
 
-class AirSim_Settings:
+class AS_Settings:
 
     def __init__(self, settings_path=None):
 
@@ -89,8 +89,11 @@ class AirSim_Settings:
 
         self.set(setting, value)
 
+
+# Class Tests
 if __name__ == '__main__':
-    settings = AirSim_Settings()
+
+    settings = AS_Settings()
 
     settings.set('Vehicles/SimpleFlight/VehicleType', 'SimpleFlight')
     tmp_setting = settings.get('Vehicles/SimpleFlight/VehicleType')
