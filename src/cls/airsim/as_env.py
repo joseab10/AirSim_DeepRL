@@ -18,11 +18,12 @@ class Environments(Enum):
 
 class AS_Environment:
 
-    def __init__(self, env:Environments=Environments.Maze , env_path:str='env', drone:bool=True,
+    def __init__(self, target_positions,  env:Environments=Environments.Maze , env_path:str='env', drone:bool=True,
                  settings_path:str=None,
                  stepped_simulation:bool=True, step_duration:float=0.5,
                  manual_mode:bool=False, joystick:Union[int,None]=0,
-                 rendering:bool=True, lowres:bool=True):
+                 rendering:bool=True, lowres:bool=True,
+                 crash_terminate=True, max_steps = 1000, min_reward=-1000):
 
         self.settings = AS_Settings(settings_path)
 
@@ -88,6 +89,15 @@ class AS_Environment:
             self.settings.set(vehicle_settings_path + 'RC/RemoteControlID', joystick)
             self.settings.set(vehicle_settings_path + 'RC/AllowAPIWhenDisconnected', self.manual_mode)
 
+        # Reward Terminal Conditions
+        self.crash_terminate = crash_terminate
+        self.target_positions = target_positions
+        self.max_steps = max_steps
+        self.steps = 0
+
+        self.acc_reward = 0
+        self.min_reward = min_reward
+
         self.settings.dump()
 
 
@@ -136,6 +146,8 @@ class AS_Environment:
 
     def step(self, action):
 
+        self.steps += 1
+
         if self.stepped_simulation:
             self.client.simContinueForTime(self.step_duration)
 
@@ -145,10 +157,12 @@ class AS_Environment:
             self.client.moveByVelocity()
 
         state = self._get_state()
-        reward = self._reward_function()
-        terminal = self._terminal_state()
+        step_reward = self._reward_function(state)
+        terminal = self._terminal_state(state)
 
-        return (state['scene'], state['pose']), reward, terminal
+        self.acc_reward += reward
+
+        return state, step_reward, terminal
 
 
     def _get_state(self):
@@ -168,10 +182,26 @@ class AS_Environment:
     def _reward_function(self, state):
         reward = 0
 
+        current_target = self.target_positions.pop()
+
+        planar_distance = sqrt()
+
         return reward
 
     def _terminal_state(self, state):
+
         terminal = False
+
+        if state['coll']['force']:
+            terminal = True
+
+        if self.steps > self.max_steps:
+            terminal = True
+
+        if self.acc_reward < self.min_reward:
+            terminal = True
+
+
 
         return terminal
 

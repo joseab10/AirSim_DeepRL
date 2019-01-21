@@ -1,19 +1,27 @@
+import sys
+from os import path
+SCR_PATH = path.dirname(__file__)
+sys.path.append(path.join(SCR_PATH, '..','..', 'lib'))
+sys.path.append(path.join(SCR_PATH, '..','..', 'cls'))
+sys.path.append(path.join(SCR_PATH, '..','..', 'scr'))
+
 import tensorflow as tf
+import drl_parser
 
 import json
 from os import path
 
 class Model:
 
-    def __init__(self, model_dir:str, model_file:str,
+    def __init__(self, model_file:str=None, config:dict=None,
                  name_suffix=''):
 
-        # Get architecture from file
-        model_path = path.join(model_dir, model_file)
-
-        with open(model_path, 'r') as arq_file:
-            self._config = json.load(arq_file)
-
+        if model_file is not None:
+            self._init_with_file(model_file)
+        elif config is not None:
+            self._init_with_dict(config)
+        else:
+            raise NotImplementedError('No valid configuration was provided.')
 
         self._name_suffix = name_suffix
         self.name = self._config['name'] + self._name_suffix
@@ -23,17 +31,28 @@ class Model:
         # Variable_name Counters (to keep names unique)
         self._cnv_var_cnt = 0
 
-
         self._create_net()
 
 
     # Constructors (Private)
     # --------------------------------------------------------------------------------
+    def _init_with_file(self, model_file):
+
+        with open(model_file, 'r') as arq_file:
+            config = json.load(arq_file)
+
+            self._init_with_dict(config)
+
+    def _init_with_dict(self, config:dict):
+
+        self._config = config
+
     def _create_net(self):
 
-        net_name = self._config['name'].upper()
+        net_name = self._config['name'] + self._name_suffix
+        net_name = net_name.upper()
 
-        with tf.variable_scope(net_name + self._name_suffix):
+        with tf.variable_scope(net_name):
 
             # Create Input Subnets
             subnet_outputs = []
@@ -53,57 +72,7 @@ class Model:
             # Create Output Subnet (connecting all input Subnets)
             # It is the user's responsibility to add the necessary stack/reshapes
             # layers in the config file
-
-            num_outputs = self._config['hyperparameters']['num_output_classes']
-            output_net_name = self._config['output_subnet']['name'].upper()
-
-            with tf.name_scope(output_net_name) and tf.variable_scope(output_net_name):
-
-                last_output = self._create_subnet(self._config['output_subnet'],
-                                                  last_output=last_output,
-                                                  output_subnet=True)
-
-                self.predictions = tf.layers.dense(last_output,
-                                              num_outputs,
-                                              name="output")
-
-
-                self._create_input_layer({'name': 'actions', 'var type': 'int32'  , 'shape': [None]})
-                self._create_input_layer({'name': 'targets', 'var type': 'float32', 'shape': [None]})
-
-                batch_size = tf.shape(self._input_variables['actions']['var'])[self._input_variables['actions']['batch_dim']]
-                gather_indices = tf.range(batch_size) * tf.shape(self.predictions)[1] +\
-                                 self._input_variables['actions']['var']
-
-                self.action_predictions = tf.gather(tf.reshape(self.predictions, [-1]), gather_indices)
-
-
-            # Create Loss Layer
-            with tf.name_scope('LOSS') and tf.variable_scope('LOSS'):
-                losses = tf.squared_difference(self._input_variables['targets']['var'],
-                                                    self.action_predictions)
-
-                # L2 Regularization
-                l2_regularization = self._config['hyperparameters']['l2_regularization']
-                l2_penalty = self._config['hyperparameters']['l2_penalty']
-
-                if l2_regularization:
-                    weights = self._get_trainable_weights()
-
-                    self.l2_loss = tf.zeros([batch_size], name='l2_loss')
-                    for weight in weights:
-                            self.l2_loss += tf.nn.l2_loss(weight)
-
-                    self.loss = tf.reduce_mean(losses + (l2_penalty * self.l2_loss))
-
-                else:
-                    self.loss = tf.reduce_mean(losses)
-
-            with tf.name_scope('OPTIMIZER') and tf.variable_scope('OPTIMIZER'):
-                lr = self._config['hyperparameters']['learning_rate']
-                # Optimizer Parameters from original paper
-                self.optimizer = tf.train.AdamOptimizer(lr)
-                self.trainer = self.optimizer.minimize(self.loss)
+            self._create_output_layer(self._config['output_subnet'], last_output)
 
     def _create_subnet(self, config, last_output=None, output_subnet=False):
 
@@ -121,7 +90,7 @@ class Model:
     def _create_input_layer(self, config):
 
         var_type = config['var type']
-        var_type = self._parse_var_type(var_type)
+        var_type = drl_parser.parse_var_type(var_type)
         shape = config['shape']
         shape = self._parse_shape(shape)
         batch_dim = self._batch_dim(shape)
@@ -158,6 +127,54 @@ class Model:
 
         return last_output
 
+    def _create_output_layer(self, config, last_output):
+
+        num_outputs = self._config['hyperparameters']['num_output_classes']
+        output_net_name = config['name'].upper()
+
+        with tf.name_scope(output_net_name) and tf.variable_scope(output_net_name):
+            last_output = self._create_subnet(config,
+                                              last_output=last_output,
+                                              output_subnet=True)
+
+            self.predictions = tf.layers.dense(last_output,
+                                               num_outputs,
+                                               name="output")
+
+            self._create_input_layer({'name': 'actions', 'var type': 'int32', 'shape': [None]})
+            self._create_input_layer({'name': 'targets', 'var type': 'float32', 'shape': [None]})
+
+            batch_size = tf.shape(self._input_variables['actions']['var'])[
+                self._input_variables['actions']['batch_dim']]
+            gather_indices = tf.range(batch_size) * tf.shape(self.predictions)[1] + \
+                             self._input_variables['actions']['var']
+
+            self.action_predictions = tf.gather(tf.reshape(self.predictions, [-1]), gather_indices)
+
+        # Create Loss Layer
+        with tf.name_scope('LOSS') and tf.variable_scope('LOSS'):
+            losses = tf.squared_difference(self._input_variables['targets']['var'],
+                                           self.action_predictions)
+
+            # L2 Regularization
+            l2_regularization = self._config['hyperparameters']['l2_regularization']
+            l2_penalty = self._config['hyperparameters']['l2_penalty']
+
+            if l2_regularization:
+                weights = self._get_trainable_weights()
+                self.l2_loss = tf.zeros([batch_size], name='l2_loss')
+                for weight in weights:
+                    self.l2_loss += tf.nn.l2_loss(weight)
+                self.loss = tf.reduce_mean(losses + (l2_penalty * self.l2_loss))
+            else:
+                self.loss = tf.reduce_mean(losses)
+
+        with tf.name_scope('OPTIMIZER') and tf.variable_scope('OPTIMIZER'):
+            lr = self._config['hyperparameters']['learning_rate']
+            # Optimizer Parameters from original paper
+            self.optimizer = tf.train.AdamOptimizer(lr)
+            self.trainer = self.optimizer.minimize(self.loss)
+
     def _create_conv_layer(self, config, last_output):
 
         last_shape = self._layer_shape(last_output)
@@ -171,7 +188,7 @@ class Model:
         var_id = str(self._cnv_var_cnt)
         self._cnv_var_cnt += 1
 
-        activation, initializer = self._parse_activation(config['activation'])
+        activation, initializer = drl_parser.parse_activation(config['activation'])
 
         kernel = tf.get_variable('kernel_' + var_id,
                                      [kernel_size, kernel_size, last_shape[-1], filters],
@@ -208,7 +225,7 @@ class Model:
         name  = config['name'].lower()
         units = config['units']
 
-        activation, _ = self._parse_activation(config['activation'])
+        activation, _ = drl_parser.parse_activation(config['activation'])
 
         last_output = tf.layers.dense(last_output,
                                       units,
@@ -324,20 +341,6 @@ class Model:
 
     # Parsers (Private)
     # --------------------------------------------------------------------------------
-    def _parse_var_type(self, var_type:str):
-        var_types = {
-            'int8'   : tf.int8,
-            'int16'  : tf.int16,
-            'int32'  : tf.int32,
-            'int64'  : tf.int64,
-
-            'float32': tf.float32,
-        }
-
-        if var_type in var_types:
-            return var_types[var_type]
-        raise TypeError('Invalid Variable Type (' + var_type + ')')
-
     def _parse_shape(self, shape):
 
         for i in range(len(shape)):
@@ -345,27 +348,6 @@ class Model:
                 shape[i] = None
 
         return shape
-
-    def _parse_activation(self, activation:str):
-
-        init_variance = tf.contrib.layers.variance_scaling_initializer(factor=2.0, mode='FAN_IN', uniform=False)
-        init_xavier   = tf.contrib.layers.xavier_initializer()
-        init_normal   = tf.random_normal_initializer()
-
-        activation_functions = {
-            'relu'   : {'actfun': tf.nn.relu,          'init': init_variance},
-            'sigmoid': {'actfun': tf.nn.sigmoid,       'init': init_xavier},
-            'tanh'   : {'actfun': tf.nn.tanh,          'init': init_xavier},
-            'linear' : {'actfun': self._actfun_linear, 'init': init_normal}
-        }
-
-        if activation not in activation_functions:
-            activation = 'linear'
-
-        act_fun     = activation_functions[activation]['actfun']
-        initializer = activation_functions[activation]['init']
-
-        return act_fun, initializer
 
     def _parse_input_dic(self, input):
 
@@ -378,13 +360,6 @@ class Model:
                 raise IndexError('Variable (' + key + ') is not configured in the model.')
 
         return input_dict
-
-
-    # Custom Activation Functions (Private)
-    # --------------------------------------------------------------------------------
-    def _actfun_linear(self, x):
-
-        return x
 
 
     # Model Methods
@@ -410,10 +385,10 @@ class Model:
 
 
 class TargetModel(Model):
-    def __init__(self, model_dir:str, model_file:str,
+    def __init__(self, model_file:str,
                  name_suffix=''):
 
-        Model.__init__(self, model_dir, model_file, name_suffix=name_suffix + '_TARGET')
+        Model.__init__(self, model_file, name_suffix=name_suffix + '_TARGET')
         self.tau = self._config['hyperparameters']['dqn_tau']
         self._associate = self._register_associate()
 
@@ -447,22 +422,21 @@ if __name__ == '__main__':
     default_model_dir  = path.join(default_root_path, 'models', 'cfg')
     default_tb_dir     = path.join(default_root_path, 'tensorboard')
     default_model_file = 'sample_net.narq.json'
+    default_model_file = path.join(default_model_dir, default_model_file)
 
     # Argument Parser (in case this script is used to generate the visual graph
     # for some other network different from the sample one)
     parser = argparse.ArgumentParser()
-    parser.add_argument('--model_dir',  action='store', default=default_model_dir,  help='Model Configuration File Path.')
     parser.add_argument('--model_file', action='store', default=default_model_file, help='Model Configuration Filename.')
     parser.add_argument('--tb_dir',     action='store', default=default_tb_dir,     help='Tensorboard Path.')
     args = parser.parse_args()
 
-    model_dir  = args.model_dir
     model_file = args.model_file
     tb_dir     = args.tb_dir
 
     # Model objects
-    Q = Model(model_dir, model_file)
-    QTarget = TargetModel(model_dir, model_file)
+    Q = Model(model_file=model_file)
+    QTarget = TargetModel(model_file=model_file)
     net_name = Q.name
 
     # Start tensorflow session
@@ -470,7 +444,7 @@ if __name__ == '__main__':
     Q.init_variables(sess)
 
     # Write TensorBoard data
-    tensorboard_dir = path.join(tb_dir, net_name)
+    tensorboard_dir = path.join(tb_dir, 'tst', net_name)
 
     tf_writer = tf.summary.FileWriter(tensorboard_dir, sess.graph)
     tf_writer.close()

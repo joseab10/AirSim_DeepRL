@@ -5,6 +5,7 @@ from drl_replay_buffer import DRL_ReplayBuffer
 class DRL_DQNAgent:
 
     def __init__(self, Q_model, Q_target_model, num_actions:int,
+                 session,
                  # HyperParameters
                  discount_factor:float=0.99, batch_size:int=64, epsilon:float=0.05,
                  act_probabilities = None, double_q_learning = False,
@@ -46,8 +47,8 @@ class DRL_DQNAgent:
             self._expert_data.load(imitation_data_dir, imitation_data_file)
 
         # Start tensorflow session
-        self._sess = tf.Session()
-        self._sess.run(tf.global_variables_initializer())
+        self._sess = session #tf.Session()
+        #self._sess.run(tf.global_variables_initializer())
 
         self._saver = tf.train.Saver()
 
