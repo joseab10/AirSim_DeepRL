@@ -6,15 +6,6 @@ import argparse
 from pyglet.window import key
 import gym
 import numpy as np
-import pickle
-import os
-from datetime import datetime
-import gzip
-import json
-
-# <JAB>
-from utils import rgb2gray, one_hot, action_to_id
-# </JAB>
 
 
 def key_press(k, mod):
@@ -32,51 +23,7 @@ def key_release(k, mod):
     if k == key.DOWN:  a[2] = 0.0
 
 
-def store_data(data, datasets_dir="./data", file_name='data.pkl.gzip'):
-    # save data
-    if not os.path.exists(datasets_dir):
-        os.mkdir(datasets_dir)
-    data_file = os.path.join(datasets_dir, file_name)
 
-    # <JAB>
-    # Read Data file contents, append current session's data, then save it.
-    # That way, we can store data from multiple playing sessions.
-
-    if os.path.exists(data_file):
-        f = gzip.open(data_file,'rb')
-        prev_data = pickle.load(f)
-
-        prev_data["state"]      += data["state"]  # state has shape (96, 96, 3)
-        prev_data["action"]     += data["action"]  # action has shape (1, 3)
-        #prev_data["next_state"] += data["next_state"]
-        #prev_data["reward"]     += data["reward"]
-        #prev_data["terminal"]   += data["terminal"]
-
-        data = prev_data
-
-    # </JAB>
-
-    f = gzip.open(data_file,'wb')
-    pickle.dump(data, f)
-
-
-def save_results(episode_rewards, results_dir="./results"):
-    # save results
-    if not os.path.exists(results_dir):
-        os.mkdir(results_dir)
-
-     # save statistics in a dictionary and write them into a .json file
-    results = dict()
-    results["number_episodes"] = len(episode_rewards)
-    results["episode_rewards"] = episode_rewards
-
-    results["mean_all_episodes"] = np.array(episode_rewards).mean()
-    results["std_all_episodes"] = np.array(episode_rewards).std()
- 
-    fname = os.path.join(results_dir, "results_manually-%s.json" % datetime.now().strftime("%Y%m%d-%H%M%S"))
-    fh = open(fname, "w")
-    json.dump(results, fh)
-    print('... finished')
 
 
 if __name__ == "__main__":
