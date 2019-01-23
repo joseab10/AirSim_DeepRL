@@ -12,11 +12,11 @@ class AS_Settings:
             if system() == 'Windows':
                 settings_path = getenv('HOMEPATH')
 
-                self.path = path.join(settings_path, 'Documents', 'AirSim', 'settings.json')
+                self.path = path.join(settings_path, 'Documents', 'Airsim', 'settings.json')
             else:
                 settings_path = getenv('HOME')
 
-                self.path = path.join(settings_path, 'Documents', 'Airsim', 'settings.json')
+                self.path = path.join(settings_path, 'Documents', 'AirSim', 'settings.json')
 
         self.settings={}
 
