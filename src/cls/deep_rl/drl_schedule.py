@@ -3,9 +3,9 @@ from enum import Enum
 
 
 class DRL_ScheduleFunctions(Enum):
-    Constant    = 0
-    Linear      = 1
-    Exponential = 2
+    Constant    = 'CONSTANT'
+    Linear      = 'LINEAR'
+    Exponential = 'EXPONENTIAL'
 
 
 class DRL_Schedule:

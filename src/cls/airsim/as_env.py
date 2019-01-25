@@ -1,10 +1,12 @@
 import subprocess
 
-from sys import platform
-from os import path
+from sys import platform, stdout
+from os import path, remove
 from time import sleep
 from enum import Enum
 from typing import Union
+from urllib.request import urlopen
+import zipfile
 
 import numpy as np
 import airsim
@@ -12,9 +14,10 @@ import airsim
 from as_settings import AS_Settings
 
 class Environments(Enum):
-    Blocks       = 0
-    Maze         = 1
-    Neighborhood = 2
+    Blocks       = 'BLOCKS'
+    Maze         = 'MAZE'
+    Neighborhood = 'NEIGHBORHOOD'
+    Mountains    = 'MOUNTAINS'
 
 # CONSTANTS
 
@@ -55,7 +58,8 @@ Z = 2
 
 class AS_Environment:
 
-    def __init__(self, target_positions,  env:Environments=Environments.Maze , env_path:str='env', drone:bool=True,
+    def __init__(self, target_positions=[],  env:Environments=Environments.Maze , env_path:str='env', download:bool=False,
+                 drone:bool=True,
                  settings_path:str=None,
                  stepped_simulation:bool=True, step_duration:float=0.1,
                  manual_mode:bool=False, joystick:Union[int,None]=0,
@@ -65,19 +69,92 @@ class AS_Environment:
         self.settings = AS_Settings(settings_path)
 
         environments = {
-            Environments.Blocks      : {'subfolder': ''        , 'bin': ''},
-            Environments.Maze        : {'subfolder': 'Car_Maze', 'bin': 'Car_Maze.exe'},
-            Environments.Neighborhood: {'subfolder': 'AirSimNH', 'bin': 'AirSimNH.exe'},
+            Environments.Blocks      : {'subfolder': 'Blocks'            , 'bin': 'Blocks'            },
+            Environments.Maze        : {'subfolder': 'Car_Maze'          , 'bin': 'Car_Maze'          },
+            Environments.Neighborhood: {'subfolder': 'AirSimNH'          , 'bin': 'AirSimNH'          },
+            Environments.Mountains   : {'subfolder': 'LandscapeMountains', 'bin': 'LandscapeMountains'},
+        }
+
+        url = {
+            'darwin':
+                {
+                    Environments.Blocks      : 'https://github.com/Microsoft/AirSim/releases/download/v1.2.0Linux/Blocks.zip',
+                    Environments.Neighborhood: 'https://github.com/Microsoft/AirSim/releases/download/v1.2.0Linux/AirSimNH.zip',
+                    Environments.Maze        : '',
+                    Environments.Mountains   : ''
+                },
+            'linux':
+                {
+                    Environments.Blocks      : 'https://github.com/Microsoft/AirSim/releases/download/v1.2.0Linux/Blocks.zip'  ,
+                    Environments.Neighborhood: 'https://github.com/Microsoft/AirSim/releases/download/v1.2.0Linux/AirSimNH.zip',
+                    Environments.Maze        : '',
+                    Environments.Mountains   : ''
+                },
+            'win32':
+                {
+                    Environments.Blocks      : '',
+                    Environments.Neighborhood: 'https://github.com/Microsoft/AirSim/releases/download/v1.2.1/AirSimNH.zip'  ,
+                    Environments.Maze        : 'https://github.com/Microsoft/AirSim/releases/download/v1.2.1/SimpleMaze.zip',
+                    Environments.Mountains   : 'https://github.com/Microsoft/AirSim/releases/download/v1.2.1/LandscapeMountains.zip'
+                }
+        }
+
+        extension ={
+            'darwin': 'sh',
+            'linux' : 'sh',
+            'win32' : 'exe'
         }
 
         #self.env = environments[env]
 
-        self.env = ''
+        env_folder = ''
         for subpath in env_path.split(path.sep):
-            self.env = path.join(self.env, subpath)
+            env_folder = path.join(env_folder, subpath)
         for subpath in environments[env]['subfolder'].split(path.sep):
-            self.env = path.join(self.env, subpath)
-        self.env = path.join(self.env, environments[env]['bin'])
+            self.env = path.join(env_folder, subpath)
+
+        env_bin = environments[env]['bin'] + '.' + extension[platform]
+        self.env = path.join(self.env, env_bin)
+
+
+        # Download and unzip environment if it doesn't exist already
+        if download and not path.isfile(self.env):
+
+            if platform not in url:
+                raise SystemError('System (' + platform + ') not supported')
+            if env not in url[platform]:
+                raise SystemError('Environment (' + env.value + ') not supported for this platform.')
+
+            zip_url = url[platform][env]
+
+            if zip_url == '':
+                raise SystemError('Environment (' + env.value + ') not supported for this platform.')
+
+            zip_filename = zip_url.split('/')[-1]
+            zip_target = path.join(env_folder, zip_filename)
+
+            req = urlopen(zip_url)
+            zip_length = int(req.headers.get('content-length'))
+            CHUNK = 16 * 1024
+
+            with open(zip_target, 'wb') as zip_file:
+
+                zip_file.write(req.content)
+
+                dl = 0
+                total_length = int(zip_length)
+                for data in req.iter_content(chunk_size=CHUNK):
+                    dl += len(data)
+                    zip_file.write(data)
+                    done = int(50 * dl / total_length)
+                    stdout.write("\r[%s%s]" % ('=' * done, ' ' * (50 - done)))
+                    stdout.flush()
+
+            zip_file = zipfile.ZipFile(zip_target)
+            zip_file.extractall(env_folder)
+            zip_file.close()
+
+            remove(zip_target)
 
         # Process Object
         self.process = None
@@ -173,6 +250,7 @@ class AS_Environment:
         # Reward Terminal Conditions
         self.crash_terminate = crash_terminate
         self.target_positions = target_positions
+        self.current_target_idx = 0
 
         self.max_steps = max_steps
         self.steps = 0
@@ -214,6 +292,7 @@ class AS_Environment:
         self.client.reset()
         self.client.enableApiControl(self.manual_mode)
         self.client.armDisarm(True)
+        self.current_target_idx = 0
 
         # Move to Initial Position
         tmp_pose = self.client.simGetVehiclePose()
@@ -248,6 +327,8 @@ class AS_Environment:
         self.points_per_meter = max_points / dist_accum
         self.min_reward = -3 * max_points
 
+        return self._get_state()
+
 
 
     def close(self):
@@ -281,6 +362,27 @@ class AS_Environment:
             args.append(tmp_arg)
 
         self.process = subprocess.Popen(args)
+
+
+    def add_target_by_pos(self, target):
+        self.target_positions.append(target)
+
+    def add_target_by_name(self, target_name, offset=(0, 0, 0)):
+        target = self.client.simGetObjectPose(target_name)
+
+        target[X] += offset[X]
+        target[Y] += offset[Y]
+        target[Z] += offset[Z]
+
+        self.add_target_by_pos(target)
+
+    def add_targets_by_pos(self, targets):
+        for target in targets:
+            self.add_target_by_pos(target)
+
+    def add_targets_by_name(self, target_names):
+        for target in target_names:
+            self.add_target_by_pos(target)
 
     def step(self, action_id):
 
@@ -329,29 +431,31 @@ class AS_Environment:
     def _reward_function(self, state):
         reward = 0
 
-        current_target = self.target_positions[0]
-        current_position = state['pose'].position
-        current_position = (current_position.x_val, current_position.y_val, current_position.z_val)
+        if self.current_target_idx < len(self.target_positions):
 
-        distance = np.sqrt((current_target[X] - current_position[X]) ** 2 +
-                           (current_target[Y] - current_position[Y]) ** 2 +
-                           (current_target[Z] - current_position[Z]) ** 2)
+            current_target = self.target_positions[self.current_target_idx]
+            current_position = state['pose'].position
+            current_position = (current_position.x_val, current_position.y_val, current_position.z_val)
 
-        advanced_distance = self.last_dist_to_target - distance
-        reward += advanced_distance * self.points_per_meter
+            distance = np.sqrt((current_target[X] - current_position[X]) ** 2 +
+                               (current_target[Y] - current_position[Y]) ** 2 +
+                               (current_target[Z] - current_position[Z]) ** 2)
 
-        self.last_dist_to_target = distance
+            advanced_distance = self.last_dist_to_target - distance
+            reward += advanced_distance * self.points_per_meter
 
-        threshold = 0.1
-        if distance < threshold:
-            self.target_positions = self.target_positions[1:]
+            self.last_dist_to_target = distance
 
-        collission = state['coll']
-        if collission.has_collided:
-            if collission.penetration_depth > self.collission_threshold:
-                reward -= 200 * collission.penetration_depth
+            threshold = 0.1
+            if distance < threshold:
+                self.current_target_idx += 1
 
-        reward += self.step_penalty
+            collission = state['coll']
+            if collission.has_collided:
+                if collission.penetration_depth > self.collission_threshold:
+                    reward -= 200 * collission.penetration_depth
+
+            reward += self.step_penalty
 
         return reward
 
@@ -368,6 +472,9 @@ class AS_Environment:
         if self.acc_reward < self.min_reward:
             return True
 
+        if self.current_target_idx >= len(self.target_positions):
+            return True
+
         return False
 
     def _parse_actid(self, action_id:int):
@@ -376,6 +483,9 @@ class AS_Environment:
         else:
             return CarAct(action_id)
 
+    def act2id(self, action):
+        index = self.possible_actions[action]['index'].value
+        return index
 
     def actid2str(self, action_id):
         action_id = self._parse_actid(action_id)
@@ -408,12 +518,28 @@ class AS_Environment:
 # Class Tests
 if __name__ == '__main__':
 
+    import argparse
 
-    env_path = path.join('..', '..', '..', 'env')
+    # Default arguments
+    default_env_path = path.join('..', '..', '..', 'env')
+    default_env      = 'Blocks'
+
+    # Argument Parser (in case this script is used to generate the visual graph
+    # for some other network different from the sample one)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--env_path', action='store', default=default_env_path, help='Environment Directory.')
+    parser.add_argument('--env'     , action='store', default=default_env     , help='Environment.')
+    args = parser.parse_args()
+
+    env = args.env.upper()
+    env = Environments(env)
+
+    env_path = args.env_path
+
 
     target_positions = [(0, 0, 0), (1, 1, -1)]
 
-    env = AS_Environment(target_positions, env=Environments.Maze, env_path=env_path,
+    env = AS_Environment(target_positions, env=env, env_path=env_path,
                          stepped_simulation=True, step_duration=1)
 
     max_episodes = 3

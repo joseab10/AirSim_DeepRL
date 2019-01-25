@@ -11,7 +11,7 @@ import drl_parser
 import json
 from os import path
 
-class Model:
+class DRL_Model:
 
     def __init__(self, model_file:str=None, config:dict=None,
                  name_suffix=''):
@@ -338,6 +338,9 @@ class Model:
 
         return weights
 
+    def num_outputs(self):
+        return self._config['hyperparameters']['num_output_classes']
+
 
     # Parsers (Private)
     # --------------------------------------------------------------------------------
@@ -384,11 +387,11 @@ class Model:
 
 
 
-class TargetModel(Model):
-    def __init__(self, model_file:str,
+class DRL_TargetModel(DRL_Model):
+    def __init__(self, model_file:str, config:dict=None,
                  name_suffix=''):
 
-        Model.__init__(self, model_file, name_suffix=name_suffix + '_TARGET')
+        DRL_Model.__init__(self, model_file=model_file, config=config, name_suffix=name_suffix + '_TARGET')
         self.tau = self._config['hyperparameters']['dqn_tau']
         self._associate = self._register_associate()
 
@@ -435,8 +438,8 @@ if __name__ == '__main__':
     tb_dir     = args.tb_dir
 
     # Model objects
-    Q = Model(model_file=model_file)
-    QTarget = TargetModel(model_file=model_file)
+    Q = DRL_Model(model_file=model_file)
+    QTarget = DRL_TargetModel(model_file=model_file)
     net_name = Q.name
 
     # Start tensorflow session

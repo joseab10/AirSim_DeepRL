@@ -6,3 +6,8 @@ env/
 data/test_buffer.pkl.gz
 poster/
 src/cls/airsim/__pycache__/
+
+models/ckpt/
+log/
+tensorboard/
+

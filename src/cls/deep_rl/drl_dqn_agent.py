@@ -30,7 +30,7 @@ class DRL_DQNAgent:
         self._Q_model = Q_model
         self._Q_target_model = Q_target_model
         
-        self._epsilon = epsilon
+        self.epsilon = epsilon
 
         self._num_actions = num_actions
         self._batch_size = batch_size
@@ -47,8 +47,8 @@ class DRL_DQNAgent:
             self._expert_data.load(imitation_data_dir, imitation_data_file)
 
         # Start tensorflow session
-        self._sess = session #tf.Session()
-        #self._sess.run(tf.global_variables_initializer())
+        self._sess = session
+        self._sess.run(tf.global_variables_initializer())
 
         self._saver = tf.train.Saver()
 
@@ -121,7 +121,7 @@ class DRL_DQNAgent:
             action id
         """
         r = np.random.uniform()
-        if deterministic or r > self._epsilon:
+        if deterministic or r > self.epsilon:
             action_id = np.argmax(self._Q_model.predict(self._sess, state))
 
         else:
@@ -132,3 +132,6 @@ class DRL_DQNAgent:
 
     def load(self, file_name:str):
         self._saver.restore(self._sess, file_name)
+
+    def save(self, file_name:str):
+        self._saver.save(self._sess, file_name)
