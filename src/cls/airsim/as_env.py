@@ -557,14 +557,26 @@ if __name__ == '__main__':
 
         terminal = False
         step = 1
+        
         while not terminal:
-
-
-            action_id = np.random.choice(a,p=p)
+            # follow the given action sequence, then do random stuff
+            if step <= len(a_seq):
+                action_id = a_seq[step-1]
+            else:
+                action_id = np.random.choice(a,p=p)
             action = env.actid2str(action_id)
             state, reward, terminal = env.step(action_id)
             print('Step: ', step, ' Distance: ', env.last_dist_to_target, ' Action: ', action_id, ' ',
-                  action, ' Reward: ', reward, ' Total Reward: ', env.acc_reward )
+                  action, ' Action Values: ', env.prev_act, ' Reward: ', reward, ' Total Reward: ', env.acc_reward )
             step +=1
+
+    
+    # read action sequence from recordings if given as args
+    if len(argv) > 1:
+        rec_folders = argv[1:]
+        _,  actions,  _ = env.read_recordings(rec_folders)
+        a_seq = actions
+        
+        print(a_seq)
 
     env.close()
