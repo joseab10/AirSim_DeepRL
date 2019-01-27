@@ -144,12 +144,13 @@ class DRL_Model:
             self._create_input_layer({'name': 'actions', 'var type': 'int32', 'shape': [None]})
             self._create_input_layer({'name': 'targets', 'var type': 'float32', 'shape': [None]})
 
-            batch_size = tf.shape(self._input_variables['actions']['var'])[
-                self._input_variables['actions']['batch_dim']]
-            gather_indices = tf.range(batch_size) * tf.shape(self.predictions)[1] + \
-                             self._input_variables['actions']['var']
+            with tf.name_scope('predictions') and tf.variable_scope('predictions'):
+                batch_size = tf.shape(self._input_variables['actions']['var'])[
+                    self._input_variables['actions']['batch_dim']]
+                gather_indices = tf.range(batch_size) * tf.shape(self.predictions)[1] + \
+                                 self._input_variables['actions']['var']
 
-            self.action_predictions = tf.gather(tf.reshape(self.predictions, [-1]), gather_indices)
+                self.action_predictions = tf.gather(tf.reshape(self.predictions, [-1]), gather_indices, name='gather')
 
         # Create Loss Layer
         with tf.name_scope('LOSS') and tf.variable_scope('LOSS'):
@@ -430,11 +431,12 @@ if __name__ == '__main__':
     # Argument Parser (in case this script is used to generate the visual graph
     # for some other network different from the sample one)
     parser = argparse.ArgumentParser()
+    parser.add_argument('--model_dir' , action='store', default=default_model_dir , help='Model Configuration Directory.')
     parser.add_argument('--model_file', action='store', default=default_model_file, help='Model Configuration Filename.')
-    parser.add_argument('--tb_dir',     action='store', default=default_tb_dir,     help='Tensorboard Path.')
+    parser.add_argument('--tb_dir'    , action='store', default=default_tb_dir    , help='Tensorboard Path.')
     args = parser.parse_args()
 
-    model_file = args.model_file
+    model_file = path.join(args.model_dir, args.model_file)
     tb_dir     = args.tb_dir
 
     # Model objects

@@ -1,24 +1,23 @@
-# export DISPLAY=:0 
-
 import sys
-sys.path.append("../") 
+from os import path
+
+sys.path.append("../")
+SCR_PATH = path.dirname(__file__)
+sys.path.append(path.join(SCR_PATH,'..', 'lib'))
+sys.path.append(path.join(SCR_PATH,'..', 'cls', 'airsim'))
+sys.path.append(path.join(SCR_PATH,'..', 'cls', 'deep_rl'))
+sys.path.append(path.join(SCR_PATH,'..', 'scr'))
 
 import numpy as np
-
-import os
-
 import tensorflow as tf
 
-from ..cls.airsim.as_env import *
-from ..cls.deep_rl.drl_dqn_agent import DRL_DQNAgent
-from ..cls.deep_rl.drl_model import DRL_Model, DRL_TargetModel
-from ..cls.deep_rl.drl_tb_eval import DRL_TB_Evaluation
-from ..cls.deep_rl.drl_episode_stats import DRL_EpisodeStats
-
-
-
-from ..cls.deep_rl.drl_schedule import *
-from ..cls.deep_rl.drl_early_stop import DRL_EarlyStop
+from cls.airsim.as_env import *
+from cls.deep_rl.drl_dqn_agent import DRL_DQNAgent
+from cls.deep_rl.drl_model import DRL_Model, DRL_TargetModel
+from cls.deep_rl.drl_tb_eval import DRL_TB_Evaluation
+from cls.deep_rl.drl_episode_stats import DRL_EpisodeStats
+from cls.deep_rl.drl_schedule import *
+from cls.deep_rl.drl_early_stop import DRL_EarlyStop
 
 import datetime
 import json
@@ -238,18 +237,18 @@ if __name__ == "__main__":
 
     import argparse
 
-    root_dir = os.path.join('..', '..', '..')
+    root_dir = path.join('..', '..', '..')
 
     # Default Arguments
-    default_model_cfg_dir = os.path.join(root_dir, 'models', 'cfg')
-    default_model_cpt_dir = os.path.join(root_dir, 'models', 'cpt')
-    default_model_res_dir = os.path.join(root_dir, 'models', 'res')
-    default_tb_dir        = os.path.join(root_dir, 'tensorboard')
+    default_model_cfg_dir = path.join(root_dir, 'models', 'cfg')
+    default_model_cpt_dir = path.join(root_dir, 'models', 'cpt')
+    default_model_res_dir = path.join(root_dir, 'models', 'res')
+    default_tb_dir        = path.join(root_dir, 'tensorboard')
 
     default_model = 'net1'
     default_model_ext = 'narq.json'
 
-    default_env = 'LandscapeMountains'
+    default_env = 'Mountains'
 
     # Argument Parsing
     parser = argparse.ArgumentParser()
@@ -316,7 +315,7 @@ if __name__ == "__main__":
 
     model_res_dir = args.res_dir
 
-    environment = Environments(args.env)
+    environment = Environments(args.env.upper())
 
     targets = ['SM_PylonA_60m6', 'SM_PylonA_60m5']
 
@@ -368,13 +367,16 @@ if __name__ == "__main__":
         num_actions = Q.num_outputs()
 
         # Random Action Probability Distribution
-        act_probabilities = np.ones(num_actions)
-        # TODO:
-        #act_probabilities[STRAIGHT] = 18.05
-        #act_probabilities[ACCELERATE] = 40.55
-        #act_probabilities[LEFT] = 19.66
-        #act_probabilities[RIGHT] = 18.05
-        #act_probabilities[BRAKE] = 3.687
+        act_probabilities = np.zeros(num_actions)
+
+        act_probabilities[DroneAct.VxBW.value] = 2
+        act_probabilities[DroneAct.VxFW.value] = 10
+        act_probabilities[DroneAct.VyBW.value] = 2
+        act_probabilities[DroneAct.VyFW.value] = 10
+        act_probabilities[DroneAct.VzBW.value] = 2
+        act_probabilities[DroneAct.VzFW.value] = 50
+        act_probabilities[DroneAct.YawL.value] = 10
+        act_probabilities[DroneAct.YawR.value] = 10
 
         act_probabilities /= np.sum(act_probabilities)
 

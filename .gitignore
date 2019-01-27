@@ -5,7 +5,9 @@ env/
 
 data/test_buffer.pkl.gz
 poster/
+
 src/cls/airsim/__pycache__/
+src/cls/deep_rl/__pycache__/
 
 models/ckpt/
 log/

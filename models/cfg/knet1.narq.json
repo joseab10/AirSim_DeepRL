@@ -1,0 +1,157 @@
+{
+	"name"           : "knet1",
+	"desc"           : "KombiNet1: Combinational Neural Network for processing image and sensor feeds.",
+
+
+	"hyperparameters": {
+
+		"num_output_classes": 8,
+		"learning_rate"     : 0.0001,
+
+		"dropout"           : true,
+		"dropout_rate"      : 0.8,
+
+		"l2_regularization" : true,
+		"l2_penalty"        : 0.01,
+
+		"dqn_tau"           : 0.01
+	},
+
+
+	"subnets"        : [
+		{
+			"name"  : "img_net",
+			"desc"  : "Network for processing the scene video stream from the agent's camera.",
+
+			"layers": [
+				{
+					"type"       : "inpt",
+					"name"       : "input",
+
+					"shape"      : [null, 144, 255, 3],
+					"var type"   : "float32"
+				},
+				{
+					"type"        : "conv",
+					"name"        : "conv_1",
+					"kernel size" : 7,
+					"filters"     : 3,
+					"activation"  : "relu",
+					"padding"     : "VALID",
+					"stride"      : [2, 2, 2, 2]
+				},
+				{
+					"type"        : "conv",
+					"name"        : "conv_2",
+					"kernel size" : 5,
+					"filters"     : 5,
+					"activation"  : "relu",
+					"padding"     : "VALID",
+					"stride"      : [2, 2, 2, 2]
+				}
+				,
+				{
+					"type"        : "conv",
+					"name"        : "conv_3",
+					"kernel size" : 3,
+					"filters"     : 5,
+					"activation"  : "relu",
+					"padding"     : "VALID",
+					"stride"      : [2, 2, 2, 2]
+				},
+				{
+					"type"        : "conv",
+					"name"        : "conv_4",
+					"kernel size" : 3,
+					"filters"     : 10,
+					"activation"  : "relu",
+					"padding"     : "VALID",
+					"stride"      : [2, 2, 2, 2]
+				},
+				{
+					"type"        : "conv",
+					"name"        : "conv_5",
+					"kernel size" : 3,
+					"filters"     : 10,
+					"activation"  : "relu",
+					"padding"     : "VALID",
+					"stride"      : [2, 2, 2, 2],
+
+					"pooling"     : "max",
+					"pool ksize"  : [1, 2, 2, 1],
+					"pool stride" : [1, 2, 2, 1],
+					"pool padding": "VALID"
+				},
+				{
+					"type"        : "flat",
+					"name"        : "flat_1"
+				}
+			]
+		},
+		{
+			"name"  : "sns_net",
+			"desc"  : "Network for processing sensor feeds from GPS, IMUs, etc.",
+
+			"layers": [
+				{
+					"type"       : "inpt",
+					"name"       : "input",
+
+					"shape"		 : [null, 6],
+					"var type"   : "float32"
+				},
+				{
+					"type"      : "fuco",
+					"name"      : "fcl_1",
+					"units"     : 20,
+					"activation": "relu"
+				},
+				{
+					"type"        : "fuco",
+					"name"        : "fcl_2",
+
+					"units"       : 20,
+					"activation"  : "relu"
+				},
+				{
+					"type"        : "fuco",
+					"name"        : "fcl_3",
+
+					"units"       : 10,
+					"activation"  : "relu"
+				}
+			]
+		}
+	],
+
+
+	"output_subnet"  : {
+
+		"name" : "out_net",
+		"desc" : "Network for processing the combination of the input networks.",
+
+		"layers" : [
+			{
+				"type"        : "ccat",
+				"name"        : "concat_1",
+
+				"axis"        : 1
+			},
+			{
+				"type"        : "fuco",
+				"name"        : "o_fclo_1",
+
+				"units"     : 10,
+				"activation": "relu"
+			},
+			{
+				"type"        : "fuco",
+				"name"        : "o_fcl_2",
+
+				"units"     : 10,
+				"activation": "relu"
+			}
+		]
+	}
+}
+
