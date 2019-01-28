@@ -32,7 +32,18 @@ def run_episode(env, agent, deterministic,  do_training=True, do_prefill=False,
 
     step = 1
 
-    state = env.reset()
+    min_x = -4
+    max_x = 20
+    min_y = -4
+    max_y = 4
+    min_z = -8
+    max_z = 0.1
+
+    x_ini = np.random.uniform(min_x, max_x)
+    y_ini = np.random.uniform(min_y, max_y)
+    z_ini = np.random.uniform(min_z, max_z)
+
+    state = env.reset(starting_position=(x_ini, y_ini, z_ini))
     state = state_preprocessing(state)
 
     terminal = False
@@ -366,13 +377,14 @@ if __name__ == "__main__":
     # Render the carracing 2D environment
     rendering = args.render
 
-    stepped_sumulation = args.step_sim
+    stepped_simulation = args.step_sim
 
     verbose = args.verbose
     quick_debug = args.quick_debug
 
-    env = AS_Environment(env=environment, env_path=env_dir,rendering=rendering,stepped_simulation=stepped_sumulation)
-    env.reset()
+    env = AS_Environment(env=environment, env_path=env_dir,rendering=rendering,stepped_simulation=stepped_simulation)
+    #env.reset()
+    print('\n\n***Environment Loaded and API connected***')
 
     if environment == Environments.Mountains:
         # Transmission Line Inspection
@@ -380,7 +392,7 @@ if __name__ == "__main__":
                    'SM_PylonA_60M2', 'SM_PylonA_60M3', 'SM_PylonA_60M7']
         env.add_targets_by_name(targets)
     else:
-        targets = [(0, 0, -5), (5, 5, -5), (10, -10, -8), (0, 0, -5)]
+        targets = [(20, 0, -5), (5, 5, -5), (10, -10, -8), (0, 0, -5)]
         env.add_targets_by_pos(targets)
 
 
@@ -428,6 +440,8 @@ if __name__ == "__main__":
                          double_q_learning=double_q_learning,
                          replay_buffer_capacity=buffer_capacity, prefill_bs_percentage=prefill_bs_pc)
 
+    print('\n***Agent instantiated***\n')
+
 
     # Perform Training
     if train:
@@ -464,13 +478,13 @@ if __name__ == "__main__":
         early_stop = DRL_EarlyStop(early_stop_patience, min_steps=decay_episodes)
 
         # Buffer Filling
-        print("*** Prefilling Buffer ***")
+        print("\n*** Prefilling Buffer ***\n")
         prefill_buffer(env, agent, max_timesteps=prefill_bs_pc * batch_size, verbose=verbose)
         # Now after buffering, set epsilon to the desired initial value
         agent.epsilon = epsilon0
 
         # Training
-        print("\n\n*** Training Agent ***")
+        print("\n*** Training Agent ***\n")
         train_online(env, agent, num_episodes, epsilon_schedule, early_stop,
                      max_timesteps=max_timesteps,
                      ckpt_dir=model_ckpt_dir, tensorboard_dir=tb_dir, verbose=verbose)
@@ -478,7 +492,7 @@ if __name__ == "__main__":
 
     # Perform Testing
     if test:
-        print("\n\n*** Testing Agent ***")
+        print("\n*** Testing Agent ***\n")
 
         n_test_episodes = 15
         if quick_debug:

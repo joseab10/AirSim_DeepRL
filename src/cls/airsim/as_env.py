@@ -183,7 +183,7 @@ class AS_Environment:
         self.stepped_simulation = stepped_simulation
 
         # AirSim API Client
-        self.timeout = 30
+        self.timeout = 60
 
         self.max_action_value = 250
         self.fast_deceleration = fast_deceleration
@@ -296,51 +296,59 @@ class AS_Environment:
 
         self.step_penalty = -10
 
-        self.collission_threshold = 5
+        self.collision_threshold = 0.0025
 
 
 
         self.settings.dump()
 
+        self._start()
 
-    def reset(self, hard_reset=False, starting_position=(0, 0, 0)):
+
+    def reset(self, hard_reset=False, starting_position=(0, 0, -1)):
 
         if hard_reset and self._env_running():
             self.close()
-
-        env_found = False
-        try:
-            env_found = self.client.ping()
-        except:
-            pass
-
-        if hard_reset or not(env_found or self._env_running()):
             self._start()
-            sleep(5)
-            if not self.drone:
-                self.client = airsim.CarClient(timeout_value=self.timeout)
-            else:
-                self.client = airsim.MultirotorClient(timeout_value=self.timeout)
-            self.client.confirmConnection()
 
         self.client.reset()
-        self.client.enableApiControl(self.manual_mode)
+        self.client.enableApiControl(True)
         self.client.armDisarm(True)
         self.current_target_idx = 0
+        self.acc_reward = 0
+        self.steps = 0
 
         # Move to Initial Position
         tmp_pose = self.client.simGetVehiclePose()
         tmp_pose.position.x_val = starting_position[X]
         tmp_pose.position.y_val = starting_position[Y]
         tmp_pose.position.z_val = starting_position[Z]
-        tmp_pose.orientation.x_val = starting_position[X]
-        tmp_pose.orientation.y_val = starting_position[Y]
-        tmp_pose.orientation.z_val = starting_position[Z]
-        self.client.simSetVehiclePose(tmp_pose, True)
-
+        tmp_pose.orientation.x_val = 0#starting_position[X]
+        tmp_pose.orientation.y_val = 0#starting_position[Y]
+        tmp_pose.orientation.z_val = 0#starting_position[Z]
+        #self.client.simSetVehiclePose(tmp_pose, True)
+        #self.client.simSetPose(tmp_pose, True)
         if self.drone:
+            self.client.takeoffAsync().join()
+
+        self.client.moveToPositionAsync(starting_position[X], starting_position[Y], starting_position[Z], 5).join()
+        #self.client.moveToPosition(starting_position[X], starting_position[Y], starting_position[Z], 1000).join()
+        #sleep(10)
+        #self.client.simSetObjectPose(self.vehicle_name, tmp_pose, True)
+        
+
+        #if self.drone:
             # Land if starting position was in the air
-            self.client.landAsync().join()
+            #self.client.landAsync().join()
+            #self.client.takeoffAsync().join()
+
+        #self.client.reset()
+        #self.client.enableApiControl(True)
+        #self.client.armDisarm(True)
+
+        self.client.simPrintLogMessage('Agent reset to (' + '{:4.4f}'.format(starting_position[X]) + ', ' +
+                                                            '{:4.4f}'.format(starting_position[Y]) + ', ' +
+                                                            '{:4.4f}'.format(starting_position[Z]) + ')') 
 
         if self.stepped_simulation:
             self.client.simPause(True)
@@ -374,21 +382,46 @@ class AS_Environment:
 
         return False
 
+    def _client_connected(self):
+        env_found = False
+        try:
+            env_found = self.client.ping()
+        except:
+            pass
+
+        return env_found
+         
+
     def _start(self):
         args = [self.env]
 
-        for key, val in self.process_args.items():
-            tmp_arg = '-' + key
+        
 
-            if val is not None and val != '':
-                tmp_arg += '=' + str(val)
+        if not(self._client_connected() or self._env_running()):
+            for key, val in self.process_args.items():
+                tmp_arg = '-' + key
 
-            args.append(tmp_arg)
+                if val is not None and val != '':
+                    tmp_arg += '=' + str(val)
+
+                args.append(tmp_arg)
 
         if platform == 'win32':
             self.process = subprocess.Popen(args)
         else:
             self.process = subprocess.Popen(args, stdout=FNULL, stderr=FNULL)
+
+        sleep(15)
+
+        if not self.drone:
+            self.client = airsim.CarClient(timeout_value=self.timeout)
+        else:
+            self.client = airsim.MultirotorClient(timeout_value=self.timeout)
+
+        if not self._client_connected():
+            raise ChildProcessError('API not connected')
+
+        self.client.confirmConnection()
 
 
     def _estimate_score(self):
@@ -451,6 +484,7 @@ class AS_Environment:
     def step(self, action_id):
 
         self.client.enableApiControl(True)
+        self.client.armDisarm(True)
 
         self.steps += 1
 
@@ -548,11 +582,11 @@ class AS_Environment:
             if distance < threshold:
                 self.current_target_idx += 1
 
-            collission = state['coll']
-            if collission.has_collided:
+            collision = state['coll']
+            if collision.has_collided:
                 #reward -= 2000
-                if collission.penetration_depth > self.collission_threshold:
-                    reward -= 200 * collission.penetration_depth
+                if collision.penetration_depth > self.collision_threshold:
+                    reward -= 200 * collision.penetration_depth
 
             reward += self.step_penalty
 
@@ -560,19 +594,24 @@ class AS_Environment:
 
     def _terminal_state(self, state):
 
-        collission = state['coll']
-        if collission.has_collided:
+        collision = state['coll']
+        if collision.has_collided:
+            print('\t\tAgent Collision (penetration: ' + '{:4.4f}'.format(collision.penetration_depth) + ')')
             #return True
-            if collission.penetration_depth > self.collission_threshold:
+            if collision.penetration_depth > self.collision_threshold:
+               print('\t\tMax Collision force: ' + '{:4.4f}'.format(self.collision_threshold) + ' exceeded. Terminating Episode\n')
                return True
 
         if self.steps > self.max_steps:
+            print('\t\tMaximum number of steps reached (' + str(self.max_steps) + ') Terminating Episode\n')
             return True
 
         if self.acc_reward < self.min_reward:
+            print('\t\tMinimum reward reached (' + str(self.min_reward) + ') Terminating Episode\n') 
             return True
 
         if self.current_target_idx >= len(self.target_positions):
+            print('\t\tAll targets reached. The bloody thing works!')
             return True
 
         return False
