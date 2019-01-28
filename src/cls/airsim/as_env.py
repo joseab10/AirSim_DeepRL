@@ -550,9 +550,9 @@ class AS_Environment:
 
             collission = state['coll']
             if collission.has_collided:
-                reward -= 2000
-                #if collission.penetration_depth > self.collission_threshold:
-                #    reward -= 200 * collission.penetration_depth
+                #reward -= 2000
+                if collission.penetration_depth > self.collission_threshold:
+                    reward -= 200 * collission.penetration_depth
 
             reward += self.step_penalty
 
@@ -562,9 +562,9 @@ class AS_Environment:
 
         collission = state['coll']
         if collission.has_collided:
-            return True
-            #if collission.penetration_depth > self.collission_threshold:
-            #   return True
+            #return True
+            if collission.penetration_depth > self.collission_threshold:
+               return True
 
         if self.steps > self.max_steps:
             return True

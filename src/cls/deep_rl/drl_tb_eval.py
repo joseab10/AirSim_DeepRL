@@ -1,5 +1,5 @@
 import sys
-from os import path, mkdir, makedirs
+from os import path, makedirs
 SCR_PATH = path.dirname(__file__)
 sys.path.append(path.join(SCR_PATH, '..','..', 'lib'))
 sys.path.append(path.join(SCR_PATH, '..','..', 'cls'))

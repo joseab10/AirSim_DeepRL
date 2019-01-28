@@ -56,7 +56,7 @@ class DRL_ReplayBuffer:
     def dump(self, dir:str, file_name:str, append:bool=False):
 
         if not os.path.exists(dir):
-            os.mkdir(dir)
+            os.makedirs(dir)
         data_file = os.path.join(dir, file_name)
 
         if append:

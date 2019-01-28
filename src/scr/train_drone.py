@@ -1,5 +1,5 @@
 import sys
-from os import path, mkdir, makedirs
+from os import path, makedirs
 
 sys.path.append("../")
 SCR_PATH = path.dirname(__file__)
@@ -89,7 +89,7 @@ def train_online(env, agent, num_episodes, epsilon_schedule, early_stop,
                  verbose=False):
    
     if not path.exists(ckpt_dir):
-        mkdir(ckpt_dir)
+        makedirs(ckpt_dir)
 
     tb_variables = [
                     {'plt_name': 'episode_reward'        , 'name': 'episode_reward'      , 'type': 'float32'},
