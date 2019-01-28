@@ -26,9 +26,9 @@
 			"layers": [
 				{
 					"type"       : "inpt",
-					"name"       : "input",
+					"name"       : "camera_in",
 
-					"shape"      : [null, 144, 255, 3],
+					"shape"      : [null, 144, 256, 3],
 					"var type"   : "float32"
 				},
 				{
@@ -38,7 +38,7 @@
 					"filters"     : 3,
 					"activation"  : "relu",
 					"padding"     : "VALID",
-					"stride"      : [2, 2, 2, 2]
+					"stride"      : [1, 2, 2, 1]
 				},
 				{
 					"type"        : "conv",
@@ -47,7 +47,7 @@
 					"filters"     : 5,
 					"activation"  : "relu",
 					"padding"     : "VALID",
-					"stride"      : [2, 2, 2, 2]
+					"stride"      : [1, 2, 2, 1]
 				}
 				,
 				{
@@ -57,7 +57,7 @@
 					"filters"     : 5,
 					"activation"  : "relu",
 					"padding"     : "VALID",
-					"stride"      : [2, 2, 2, 2]
+					"stride"      : [1, 2, 2, 1]
 				},
 				{
 					"type"        : "conv",
@@ -66,7 +66,7 @@
 					"filters"     : 10,
 					"activation"  : "relu",
 					"padding"     : "VALID",
-					"stride"      : [2, 2, 2, 2]
+					"stride"      : [1, 2, 2, 1]
 				},
 				{
 					"type"        : "conv",
@@ -75,7 +75,7 @@
 					"filters"     : 10,
 					"activation"  : "relu",
 					"padding"     : "VALID",
-					"stride"      : [2, 2, 2, 2],
+					"stride"      : [1, 2, 2, 1],
 
 					"pooling"     : "max",
 					"pool ksize"  : [1, 2, 2, 1],
@@ -95,9 +95,9 @@
 			"layers": [
 				{
 					"type"       : "inpt",
-					"name"       : "input",
+					"name"       : "sensor_in",
 
-					"shape"		 : [null, 6],
+					"shape"		 : [null, 7],
 					"var type"   : "float32"
 				},
 				{

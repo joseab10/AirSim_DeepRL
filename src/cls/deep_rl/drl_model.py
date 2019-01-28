@@ -7,6 +7,7 @@ sys.path.append(path.join(SCR_PATH, '..','..', 'scr'))
 
 import tensorflow as tf
 import drl_parser
+import numpy as np
 
 import json
 from os import path
@@ -353,10 +354,24 @@ class DRL_Model:
 
         return shape
 
-    def _parse_input_dic(self, input):
+    def _parse_input(self, input):
 
-        input_dict = {}
-        for key, value in input.items():
+        tmp_in_dict = {}
+
+        if isinstance(input, np.ndarray) or isinstance(input, list):
+            if isinstance(input[0], dict):
+                for key, _ in input[0].items():
+                    tmp_in_dict[key] = np.stack([input[i][key][0] for i in range(len(input))], axis=0)
+
+            else:
+                raise TypeError('Input must be a dictionary or an array of dictionaries.')
+        elif isinstance(input, dict):
+            tmp_in_dict = input
+        else:
+            raise TypeError('Input must be a dictionary or an array of dictionaries.')
+
+        input_dict={}
+        for key, value in tmp_in_dict.items():
             if key in self._input_variables:
                 input_var = self._input_variables[key]['var']
                 input_dict[input_var] = value
@@ -370,13 +385,13 @@ class DRL_Model:
     # --------------------------------------------------------------------------------
     def predict(self, session, inputs):
 
-        input_dict = self._parse_input_dic(inputs)
+        input_dict = self._parse_input(inputs)
 
         prediction = session.run(self.predictions, input_dict)
         return prediction
 
     def update(self, session, inputs):
-        input_dict = self._parse_input_dic(inputs)
+        input_dict = self._parse_input(inputs)
 
         _, loss = session.run([self.trainer, self.loss], input_dict)
         return loss

@@ -8,8 +8,9 @@ poster/
 
 src/cls/airsim/__pycache__/
 src/cls/deep_rl/__pycache__/
+src/lib/__pycache__/
 
-models/ckpt/
+models/cpt/
 log/
 tensorboard/
 

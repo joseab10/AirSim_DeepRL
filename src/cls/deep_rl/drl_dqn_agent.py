@@ -107,7 +107,18 @@ class DRL_DQNAgent:
             td_target[non_terminal_states] += self._discount_factor * q_predictions[non_terminal_states]
 
             # Update Step
-            self._Q_model.update(self._sess, batch_states, batch_actions, td_target)
+
+            update_dict={
+                'actions': batch_actions,
+                'targets' : td_target
+            }
+            if isinstance(batch_states[0], dict):
+                for key, _ in batch_states[0].items():
+                    update_dict[key] = np.array(np.stack([batch_states[i][key][0] for i in range(self._batch_size)]))
+            else:
+                update_dict['state'] = batch_states
+
+            self._Q_model.update(self._sess, update_dict)#batch_states, batch_actions, td_target)
             self._Q_target_model.update(self._sess)
    
 

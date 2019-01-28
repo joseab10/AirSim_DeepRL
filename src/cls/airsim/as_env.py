@@ -12,6 +12,7 @@ import zipfile
 
 import numpy as np
 import airsim
+import math
 
 from as_settings import AS_Settings
 
@@ -121,16 +122,13 @@ class AS_Environment:
             'win32' : 'exe'
         }
 
-        #self.env = environments[env]
+        env_folder = path.normpath(env_path)
+        self.env = path.join(env_folder, environments[env]['subfolder'])
 
-        env_folder = ''
-        for subpath in env_path.split(path.sep):
-            env_folder = path.join(env_folder, subpath)
-        for subpath in environments[env]['subfolder'].split(path.sep):
-            self.env = path.join(env_folder, subpath)
 
         env_bin = environments[env]['bin'] + '.' + extension[platform]
         self.env = path.join(self.env, env_bin)
+        self.env = path.normpath(self.env)
 
 
         # Download and unzip environment if it doesn't exist already
@@ -207,8 +205,8 @@ class AS_Environment:
                 CarAct.VxBW: {'index': CarActIdx.VX, 'sign': -1, 'factor': v_factor, 'str': 'Vx Bwd'},
                 CarAct.VyFW: {'index': CarActIdx.VY, 'sign':  1, 'factor': v_factor, 'str': 'Vy Fwd'},
                 CarAct.VyBW: {'index': CarActIdx.VY, 'sign': -1, 'factor': v_factor, 'str': 'Vy Bwd'},
-                CarAct.VzFW: {'index': CarActIdx.VZ, 'sign':  1, 'factor': v_factor, 'str': 'Vz Fwd'},
-                CarAct.VzBW: {'index': CarActIdx.VZ, 'sign': -1, 'factor': v_factor, 'str': 'Vz Bwd'},
+                CarAct.VzFW: {'index': CarActIdx.VZ, 'sign': -1, 'factor': v_factor, 'str': 'Vz Fwd'},
+                CarAct.VzBW: {'index': CarActIdx.VZ, 'sign':  1, 'factor': v_factor, 'str': 'Vz Bwd'},
             }
 
         else:
@@ -230,8 +228,8 @@ class AS_Environment:
                 DroneAct.VxBW: {'index': DroneActIdx.VX, 'sign': -1, 'factor': v_factor, 'str': 'Vx Bwd'},
                 DroneAct.VyFW: {'index': DroneActIdx.VY, 'sign':  1, 'factor': v_factor, 'str': 'Vy Fwd'},
                 DroneAct.VyBW: {'index': DroneActIdx.VY, 'sign': -1, 'factor': v_factor, 'str': 'Vy Bwd'},
-                DroneAct.VzFW: {'index': DroneActIdx.VZ, 'sign':  1, 'factor': v_factor, 'str': 'Vz Fwd'},
-                DroneAct.VzBW: {'index': DroneActIdx.VZ, 'sign': -1, 'factor': v_factor, 'str': 'Vz Bwd'},
+                DroneAct.VzFW: {'index': DroneActIdx.VZ, 'sign': -1, 'factor': v_factor, 'str': 'Vz Fwd'},
+                DroneAct.VzBW: {'index': DroneActIdx.VZ, 'sign':  1, 'factor': v_factor, 'str': 'Vz Bwd'},
                 DroneAct.YawR: {'index': DroneActIdx.Yaw, 'sign': 1, 'factor': yaw_factor, 'str': 'Yaw Right'},
                 DroneAct.YawL: {'index': DroneActIdx.Yaw, 'sign': -1, 'factor': yaw_factor, 'str': 'Yaw Left'}, 
             }
@@ -291,6 +289,9 @@ class AS_Environment:
 
         self.acc_reward = 0
         self.min_reward = min_reward
+        self._max_points = 10000
+
+        self._starting_position = (0, 0, 0)
 
         self.step_penalty = -10
 
@@ -336,28 +337,18 @@ class AS_Environment:
         tmp_pose.orientation.z_val = starting_position[Z]
         self.client.simSetVehiclePose(tmp_pose, True)
 
+        if self.drone:
+            # Land if starting position was in the air
+            self.client.landAsync().join()
+
         if self.stepped_simulation:
             self.client.simPause(True)
 
 
 
-        last_pos = starting_position
-        dist_accum = 0
-        max_points = 10000
-        first_target = True
-        for target in self.target_positions:
-            tmp_dis = np.sqrt((last_pos[X] - target[X]) ** 2 +
-                                 (last_pos[Y] - target[Y]) ** 2 +
-                                 (last_pos[Z] - target[Z]) ** 2 )
-            dist_accum += tmp_dis
+        self._starting_position = starting_position
 
-            if first_target:
-                self.last_dist_to_target = tmp_dis
-                first_target = False
-
-            last_pos = target
-        self.points_per_meter = max_points / dist_accum
-        self.min_reward = -3 * max_points
+        self._estimate_score()
 
         return self._get_state()
 
@@ -396,27 +387,66 @@ class AS_Environment:
         self.process = subprocess.Popen(args)
 
 
-    def add_target_by_pos(self, target):
+    def _estimate_score(self):
+
+        if len(self.target_positions) > 0:
+            last_pos = self._starting_position
+            dist_accum = 0
+
+            first_target = True
+            for target in self.target_positions:
+                tmp_dis = np.sqrt((last_pos[X] - target[X]) ** 2 +
+                                  (last_pos[Y] - target[Y]) ** 2 +
+                                  (last_pos[Z] - target[Z]) ** 2)
+                dist_accum += tmp_dis
+
+                if first_target:
+                    self.last_dist_to_target = tmp_dis
+                    first_target = False
+
+                last_pos = target
+            self.points_per_meter = self._max_points / dist_accum
+            self.min_reward = -3 * self._max_points
+
+        else:
+            self.points_per_meter = 100
+            self.min_reward = -3 * self._max_points
+
+
+    def add_target_by_pos(self, target, recalc_score = True):
         self.target_positions.append(target)
+        if recalc_score:
+            self._estimate_score()
 
-    def add_target_by_name(self, target_name, offset=(0, 0, 0)):
-        target = self.client.simGetObjectPose(target_name)
+    def add_target_by_name(self, target_name, offset=(0, 0, 0), recalc_score=True):
+        api_target = self.client.simGetObjectPose(target_name)
 
-        target[X] += offset[X]
-        target[Y] += offset[Y]
-        target[Z] += offset[Z]
+        target = [0, 0, 0]
 
-        self.add_target_by_pos(target)
+        target[X] += api_target.position.x_val + offset[X]
+        target[Y] += api_target.position.y_val + offset[Y]
+        target[Z] += api_target.position.z_val + offset[Z]
+
+        if  math.isnan(target[X]) or math.isnan(target[Y]) or math.isnan(target[Z]):
+            raise ValueError('Target (' + target_name + ') not found')
+
+        self.add_target_by_pos(target, recalc_score)
 
     def add_targets_by_pos(self, targets):
         for target in targets:
-            self.add_target_by_pos(target)
+            self.add_target_by_pos(target, recalc_score=False)
+
+        self._estimate_score()
 
     def add_targets_by_name(self, target_names):
         for target in target_names:
-            self.add_target_by_pos(target)
+            self.add_target_by_name(target, recalc_score=False)
+
+        self._estimate_score()
 
     def step(self, action_id):
+
+        self.client.enableApiControl(True)
 
         self.steps += 1
 
@@ -456,15 +486,38 @@ class AS_Environment:
 
 
     def _get_state(self):
-        camera_view = self.client.simGetImages([airsim.ImageRequest("0", airsim.ImageType.Scene, False, False)])
-        camera_view = camera_view[0]
-        pose = self.client.simGetVehiclePose()
+        img_response = self.client.simGetImages([airsim.ImageRequest("0", airsim.ImageType.Scene, False, False)])
+        img_response = img_response[0]
 
         collision_info = self.client.simGetCollisionInfo()
 
-        state = {'scene': camera_view,
+        pose = self.client.simGetVehiclePose()
+
+        img1d = np.fromstring(img_response.image_data_uint8, dtype=np.uint8)
+        # reshape array to 4 channel image array H X W X 4
+        img_rgba = img1d.reshape(img_response.height, img_response.width, 4)
+        # original image is fliped vertically
+        img_rgba = np.flipud(img_rgba)
+        # get rid of alpha component
+        camera_in = img_rgba[:,:,0:3]
+
+
+        sensor_in = [pose.position.x_val,
+                     pose.position.y_val,
+                     pose.position.z_val,
+                     pose.orientation.w_val,
+                     pose.orientation.x_val,
+                     pose.orientation.y_val,
+                     pose.orientation.z_val]
+
+
+
+        state = {'scene': img_response,
                  'pose' : pose,
-                 'coll' : collision_info}
+                 'coll' : collision_info,
+                }
+
+
 
         return state
 
@@ -493,8 +546,9 @@ class AS_Environment:
 
             collission = state['coll']
             if collission.has_collided:
-                if collission.penetration_depth > self.collission_threshold:
-                    reward -= 200 * collission.penetration_depth
+                reward -= 2000
+                #if collission.penetration_depth > self.collission_threshold:
+                #    reward -= 200 * collission.penetration_depth
 
             reward += self.step_penalty
 
@@ -504,8 +558,9 @@ class AS_Environment:
 
         collission = state['coll']
         if collission.has_collided:
-            if collission.penetration_depth > self.collission_threshold:
-                return True
+            return True
+            #if collission.penetration_depth > self.collission_threshold:
+            #   return True
 
         if self.steps > self.max_steps:
             return True
