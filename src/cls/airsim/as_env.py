@@ -3,7 +3,7 @@ import csv
 
 
 from sys import platform, argv, stdout
-from os import path, remove
+from os import path, remove, devnull
 from time import sleep
 from enum import Enum
 from typing import Union
@@ -71,6 +71,7 @@ X = 0
 Y = 1
 Z = 2
 
+FNULL = open(devnull, 'w')
 
 class AS_Environment:
 
@@ -384,7 +385,10 @@ class AS_Environment:
 
             args.append(tmp_arg)
 
-        self.process = subprocess.Popen(args)
+        if platform == 'win32':
+            self.process = subprocess.Popen(args)
+        else:
+            self.process = subprocess.Popen(args, stdout=FNULL, stderr=FNULL)
 
 
     def _estimate_score(self):
