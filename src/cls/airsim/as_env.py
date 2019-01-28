@@ -183,7 +183,7 @@ class AS_Environment:
         self.stepped_simulation = stepped_simulation
 
         # AirSim API Client
-        self.timeout = 15
+        self.timeout = 30
 
         self.max_action_value = 250
         self.fast_deceleration = fast_deceleration
