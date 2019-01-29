@@ -181,8 +181,8 @@ def train_online(env, agent, num_episodes, epsilon_schedule, early_stop,
 
         tensorboard.write_episode_data(i, eval_dict=eval_dict)
 
-        # Save model every 100 steps
-        if i % 100 == 0:
+        # Save model every 10 steps
+        if i % 10 == 0:
             agent.save(path.join(ckpt_dir, 'model.ckpt'))
             agent.save(path.join(ckpt_dir, 'model_%s' % datetime.now().strftime("%Y%m%d_%H%M%S") + '.ckpt'))
 
@@ -294,7 +294,7 @@ if __name__ == "__main__":
     default_env_dir = path.normpath((default_env_dir))
     default_env = 'neighborhood'
 
-    default_targets = 'default'
+	default_targets = 'default'
 
     # Argument Parsing
     parser = argparse.ArgumentParser()
@@ -356,7 +356,7 @@ if __name__ == "__main__":
 
 
 	# Targets
-    parser.add_argument('--targets', action='store', default=default_targets, help='Target Positions.')
+	parser.add_argument('--targets', action='store', default=default_targets, help='Target Positions.')
     
 
 
@@ -404,17 +404,16 @@ if __name__ == "__main__":
     print('\n\n***Environment Loaded and API connected***')
 
 	# Targets
-    tg_names = False
+	tg_names = False
     
     if targets == 'mn_lines':
         targets = ['SM_PylonA_60M6', 'SM_PylonA_60M5', 'SM_PylonA_60M4', 'SM_PylonA_60M2', 'SM_Transformer2',
                    'SM_PylonA_60M2', 'SM_PylonA_60M3', 'SM_PylonA_60M7']
         tg_names = True
     elif targets == 'nh_lines':
-        targets = [(28, 5,  -11), (60, 5,  -11), (121, 5,  -11), (133, 8,  -11), (124, 39,  -11), (122, 87,  -11), (122, 121,  -11),
-                    (90, 121,  -11), (57, 122,  -11), (36, 122,  -11), (11, 122,  -11), (5, 134,  -11), (5, 89,  -11), (5, 52,  -11), (4, 17,  -11)]
-    elif targets == 'nh_pools':
-        targets = [(48, 25, -1),  (-51, 53,  -1),  (-42, -25, -1)]
+        targets = []
+    elif: targets == 'nh_pools':
+        targets = []
     else:
         targets = [(20, 0, -5), (5, 5, -5), (10, -10, -8), (0, 0, -5)]
 
