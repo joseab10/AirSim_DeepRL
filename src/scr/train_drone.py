@@ -294,7 +294,7 @@ if __name__ == "__main__":
     default_env_dir = path.normpath((default_env_dir))
     default_env = 'neighborhood'
 
-	default_targets = 'default'
+    default_targets = 'default'
 
     # Argument Parsing
     parser = argparse.ArgumentParser()
@@ -355,8 +355,8 @@ if __name__ == "__main__":
                         help='Run a smaller problem to test all functionalities.')
 
 
-	# Targets
-	parser.add_argument('--targets', action='store', default=default_targets, help='Target Positions.')
+    # Targets
+    parser.add_argument('--targets', action='store', default=default_targets, help='Target Positions.')
     
 
 
@@ -403,7 +403,7 @@ if __name__ == "__main__":
     #env.reset()
     print('\n\n***Environment Loaded and API connected***')
 
-	# Targets
+    # Targets
 	tg_names = False
     
     if targets == 'mn_lines':
@@ -412,9 +412,9 @@ if __name__ == "__main__":
         tg_names = True
     elif targets == 'nh_lines':
         targets = []
-    elif: targets == 'nh_pools':
+    elif targets == 'nh_pools':
         targets = []
-    else:
+    else
         targets = [(20, 0, -5), (5, 5, -5), (10, -10, -8), (0, 0, -5)]
 
     if tg_names:
