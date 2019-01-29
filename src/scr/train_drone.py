@@ -74,7 +74,7 @@ def run_episode(env, agent, deterministic,  do_training=True, do_prefill=False,
             break
 
         #if step % 100 == 0 and False:
-            print('\t\tStep ', '{:4d}'.format(step), ' Reward: ', '{:4.4f}'.format(stats.episode_reward))
+        #    print('\t\tStep ', '{:4d}'.format(step), ' Reward: ', '{:4.4f}'.format(stats.episode_reward))
 
         step += 1
 
@@ -132,8 +132,6 @@ def train_online(env, agent, num_episodes, epsilon_schedule, early_stop,
 
     for i in range(num_episodes):
         #print("epsiode %d" % i)
-
-        # Hint: you can keep the episodes short in the beginning by changing max_timesteps (otherwise the car will spend most of the time out of the track)
 
         deterministic = False
         training = True
