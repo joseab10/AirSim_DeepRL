@@ -331,7 +331,7 @@ class AS_Environment:
         if self.drone:
             self.client.takeoffAsync().join()
 
-        self.client.moveToPositionAsync(starting_position[X], starting_position[Y], starting_position[Z], 5).join()
+        self.client.moveToPositionAsync(starting_position[X], starting_position[Y], starting_position[Z], 10).join()
         #self.client.moveToPosition(starting_position[X], starting_position[Y], starting_position[Z], 1000).join()
         #sleep(10)
         #self.client.simSetObjectPose(self.vehicle_name, tmp_pose, True)
@@ -411,12 +411,12 @@ class AS_Environment:
         else:
             self.process = subprocess.Popen(args, stdout=FNULL, stderr=FNULL)
 
-        sleep(15)
+        sleep(30)
 
         if not self.drone:
-            self.client = airsim.CarClient(timeout_value=self.timeout)
+            self.client = airsim.CarClient(timeout_value=self.timeout * 3)
         else:
-            self.client = airsim.MultirotorClient(timeout_value=self.timeout)
+            self.client = airsim.MultirotorClient(timeout_value=self.timeout * 3)
 
         if not self._client_connected():
             raise ChildProcessError('API not connected')
@@ -584,9 +584,9 @@ class AS_Environment:
 
             collision = state['coll']
             if collision.has_collided:
-                #reward -= 2000
+                reward -= 100
                 if collision.penetration_depth > self.collision_threshold:
-                    reward -= 200 * collision.penetration_depth
+                    reward -= 80000 * collision.penetration_depth
 
             reward += self.step_penalty
 

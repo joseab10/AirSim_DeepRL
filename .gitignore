@@ -2,6 +2,10 @@
 
 env/
 */__pycache__
+*._.DS_Store
+*.DS_Store
+*~
+*.pyc
 
 data/test_buffer.pkl.gz
 poster/

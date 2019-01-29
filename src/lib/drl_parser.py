@@ -9,8 +9,8 @@ def parse_var_type(var_type:str):
         'int64'  : tf.int64,
         'uint8'  : tf.uint8,
         'uint16' : tf.uint16,
-        'uint32' : tf.uint32,
-        'uint64' : tf.uint64,
+        #'uint32' : tf.uint32,
+        #'uint64' : tf.uint64,
         'float32': tf.float32,
     }
 

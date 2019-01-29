@@ -73,7 +73,7 @@ def run_episode(env, agent, deterministic,  do_training=True, do_prefill=False,
         if terminal or step > max_timesteps :
             break
 
-        if step % 100 == 0 and False:
+        #if step % 100 == 0 and False:
             print('\t\tStep ', '{:4d}'.format(step), ' Reward: ', '{:4.4f}'.format(stats.episode_reward))
 
         step += 1
@@ -137,7 +137,7 @@ def train_online(env, agent, num_episodes, epsilon_schedule, early_stop,
 
         deterministic = False
         training = True
-        do_rendering = rendering
+        #do_rendering = rendering
 
         # Validation (Deterministic)
         if i % 10 == 0:
@@ -185,6 +185,10 @@ def train_online(env, agent, num_episodes, epsilon_schedule, early_stop,
         if i % 100 == 0:
             agent.save(path.join(ckpt_dir, 'model.ckpt'))
             agent.save(path.join(ckpt_dir, 'model_%s' % datetime.now().strftime("%Y%m%d_%H%M%S") + '.ckpt'))
+
+            # Increment max_steps
+            env.max_steps += 100
+
         # Save model on the last step
         if i >= num_episodes - 1:
             agent.save(path.join(ckpt_dir, 'model.ckpt'))
@@ -283,12 +287,14 @@ if __name__ == "__main__":
 
     default_tb_dir        = path.join(proj_dir, 'tensorboard')
 
-    default_model = 'net1'
+    default_model = 'knet1'
     default_model_ext = 'narq.json'
 
     default_env_dir = path.join(proj_dir, 'env')
     default_env_dir = path.normpath((default_env_dir))
-    default_env = 'Mountains'
+    default_env = 'neighborhood'
+
+	default_targets = 'default'
 
     # Argument Parsing
     parser = argparse.ArgumentParser()
@@ -349,12 +355,21 @@ if __name__ == "__main__":
                         help='Run a smaller problem to test all functionalities.')
 
 
+	# Targets
+	parser.add_argument('--targets', action='store', default=default_targets, help='Target Positions.')
+    
+
+
 
 
     args = parser.parse_args()
 
     train = args.train
     test = args.test
+
+    if not (train or test):
+        print('Either --train, --test or both must be selected')
+        exit()
 
     model = args.model
 
@@ -374,6 +389,8 @@ if __name__ == "__main__":
     environment = Environments(args.env.upper())
     env_dir     = args.env_dir
 
+    targets = args.targets
+
     # Render the carracing 2D environment
     rendering = args.render
 
@@ -386,13 +403,23 @@ if __name__ == "__main__":
     #env.reset()
     print('\n\n***Environment Loaded and API connected***')
 
-    if environment == Environments.Mountains:
-        # Transmission Line Inspection
+	# Targets
+	tg_names = False
+    
+    if targets == 'mn_lines':
         targets = ['SM_PylonA_60M6', 'SM_PylonA_60M5', 'SM_PylonA_60M4', 'SM_PylonA_60M2', 'SM_Transformer2',
                    'SM_PylonA_60M2', 'SM_PylonA_60M3', 'SM_PylonA_60M7']
-        env.add_targets_by_name(targets)
+        tg_names = True
+    elif targets == 'nh_lines':
+        targets = []
+    elif: targets == 'nh_pools':
+        targets = []
     else:
         targets = [(20, 0, -5), (5, 5, -5), (10, -10, -8), (0, 0, -5)]
+
+    if tg_names:
+        env.add_targets_by_name(targets)
+    else:
         env.add_targets_by_pos(targets)
 
 
