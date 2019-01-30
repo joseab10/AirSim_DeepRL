@@ -186,6 +186,7 @@ def train_online(env, agent, num_episodes, epsilon_schedule, early_stop,
 
             # Increment max_steps
             env.max_steps += 100
+            max_timesteps += 100
 
         # Save model on the last step
         if i >= num_episodes - 1:
@@ -333,7 +334,7 @@ if __name__ == "__main__":
                         help='Initial Random Exploration rate (Epsilon).', type=float)
     parser.add_argument('--e_min',   action='store',      default=0.05,
                         help='Minimum Exploration Rate.'     , type=float)
-    parser.add_argument('--e_df', action='store', default='exponential',
+    parser.add_argument('--e_df', action='store', default='linear',
                         help='Random Exploration Decay Function.', type=str)
     parser.add_argument('--e_steps', action='store', default=150,
                         help='Random Exploration Decay Episodes.', type=int)
@@ -355,10 +356,6 @@ if __name__ == "__main__":
 
     # Targets
     parser.add_argument('--targets', action='store', default=default_targets, help='Target Positions.')
-    
-
-
-
 
     args = parser.parse_args()
 
@@ -440,6 +437,10 @@ if __name__ == "__main__":
     if quick_debug:
         buffer_capacity = 10000
 
+    max_timesteps = 10000
+    if quick_debug:
+        max_timesteps = 50
+
     prefill_bs_pc = args.prefill_bs_pc
 
     # Random Action Probability Distribution
@@ -491,10 +492,6 @@ if __name__ == "__main__":
         num_episodes = args.episodes
         if quick_debug:
             num_episodes = 5
-
-        max_timesteps = 10000
-        if quick_debug:
-            max_timesteps = 50
 
         # Exploration-vs-Exploitation Parameter (Epsilon) Schedule
         epsilon_schedule = DRL_Schedule(epsilon0, min_epsilon, decay_episodes, schedule_function=decay_function,

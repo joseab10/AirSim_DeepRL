@@ -594,9 +594,11 @@ class AS_Environment:
 
     def _terminal_state(self, state):
 
+        stp_str = '{:6d}'.format(self.steps)
+
         collision = state['coll']
         if collision.has_collided:
-            print('\t\tAgent Collision (penetration: ' + '{:4.4f}'.format(collision.penetration_depth) + ')')
+            print('\t\tAgent Collision at step ' + stp_str + '(penetration: ' + '{:4.4f}'.format(collision.penetration_depth) + ')')
             #return True
             if collision.penetration_depth > self.collision_threshold:
                print('\t\tMax Collision force: ' + '{:4.4f}'.format(self.collision_threshold) + ' exceeded. Terminating Episode\n')
@@ -607,11 +609,11 @@ class AS_Environment:
             return True
 
         if self.acc_reward < self.min_reward:
-            print('\t\tMinimum reward reached (' + str(self.min_reward) + ') Terminating Episode\n') 
+            print('\t\tMinimum reward reached (' + str(self.min_reward) + ') at step ' + stp_str + '. Terminating Episode\n')
             return True
 
         if self.current_target_idx >= len(self.target_positions):
-            print('\t\tAll targets reached. The bloody thing works!')
+            print('\t\tAll targets reached in ' + stp_str + ' steps . The bloody thing works!!!')
             return True
 
         return False
