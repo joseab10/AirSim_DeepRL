@@ -26,24 +26,30 @@ import json
 
 
 def run_episode(env, agent, deterministic,  do_training=True, do_prefill=False,
-                max_timesteps=1000, verbose=False):
+                max_timesteps=1000, verbose=False, random_start=False):
 
     stats = DRL_EpisodeStats()
 
     step = 1
 
-    min_x = -4
-    max_x = 20
-    min_y = -4
-    max_y = 4
-    min_z = -8
-    max_z = 0.1
+    if random_start:
+        min_x = -4
+        max_x = 20
+        min_y = -4
+        max_y = 4
+        min_z = -8
+        max_z = -0.1
 
-    x_ini = np.random.uniform(min_x, max_x)
-    y_ini = np.random.uniform(min_y, max_y)
-    z_ini = np.random.uniform(min_z, max_z)
+        x_ini = np.random.uniform(min_x, max_x)
+        y_ini = np.random.uniform(min_y, max_y)
+        z_ini = np.random.uniform(min_z, max_z)
 
-    state = env.reset(starting_position=(x_ini, y_ini, z_ini))
+        starting_position = (x_ini, y_ini, z_ini)
+    else:
+        starting_position = (0, 0, -0.01)
+
+
+    state = env.reset(starting_position=starting_position)
     state = state_preprocessing(state)
 
     terminal = False
@@ -97,7 +103,7 @@ def prefill_buffer(env, agent, max_timesteps = 1000, verbose=False):
 def train_online(env, agent, num_episodes, epsilon_schedule, early_stop,
                  max_timesteps=1000,
                  ckpt_dir="./models_carracing", tensorboard_dir="./tensorboard",
-                 verbose=False):
+                 verbose=False, random_start = False):
    
     if not path.exists(ckpt_dir):
         makedirs(ckpt_dir)
@@ -147,7 +153,7 @@ def train_online(env, agent, num_episodes, epsilon_schedule, early_stop,
             agent.epsilon = epsilon_schedule(i)
        
         stats = run_episode(env, agent, max_timesteps=max_timesteps,
-                            deterministic=deterministic, do_training=training, verbose=verbose)
+                            deterministic=deterministic, do_training=training, verbose=verbose, random_start=random_start)
 
         ep_type = '   '
         if i % 10 == 0:
@@ -209,14 +215,14 @@ def train_online(env, agent, num_episodes, epsilon_schedule, early_stop,
 def test_model(env, agent, model_ckpt_path, model_res_dir='res',
                max_timesteps=1000,
                n_test_episodes=15,
-               verbose=True):
+               verbose=True, random_start=False):
 
     agent.load(model_ckpt_path)
 
     episode_rewards = []
     for i in range(n_test_episodes):
         stats = run_episode(env, agent, deterministic=True, do_training=False, do_prefill=False, verbose=verbose,
-                            max_timesteps=max_timesteps)
+                            max_timesteps=max_timesteps, random_start=random_start)
         episode_rewards.append(stats.episode_reward)
         print("Episode", " Reward:", stats.episode_reward)
 
@@ -354,6 +360,10 @@ if __name__ == "__main__":
                         help='Run a smaller problem to test all functionalities.')
 
 
+    parser.add_argument('--rnd_start', action='store_true', default=False,
+                        help='Start at random positions.')
+
+
     # Targets
     parser.add_argument('--targets', action='store', default=default_targets, help='Target Positions.')
 
@@ -433,6 +443,8 @@ if __name__ == "__main__":
 
     double_q_learning = args.double_q
 
+    random_start = args.rnd_start
+
     buffer_capacity = 1000000
     if quick_debug:
         buffer_capacity = 10000
@@ -510,7 +522,7 @@ if __name__ == "__main__":
         print("\n*** Training Agent ***\n")
         train_online(env, agent, num_episodes, epsilon_schedule, early_stop,
                      max_timesteps=max_timesteps,
-                     ckpt_dir=model_ckpt_dir, tensorboard_dir=tb_dir, verbose=verbose)
+                     ckpt_dir=model_ckpt_dir, tensorboard_dir=tb_dir, verbose=verbose, random_start=random_start)
 
 
     # Perform Testing
@@ -522,7 +534,7 @@ if __name__ == "__main__":
             n_test_episodes = 3
 
         test_model(env, agent, model_ckpt, model_res_dir, n_test_episodes=n_test_episodes, max_timesteps=max_timesteps,
-                   verbose=verbose)
+                   verbose=verbose, random_start=random_start)
 
 
     session.close()
