@@ -578,7 +578,7 @@ class AS_Environment:
 
             self.last_dist_to_target = distance
 
-            threshold = 0.1
+            threshold = 0.5
             if distance < threshold:
                 self.current_target_idx += 1
 
