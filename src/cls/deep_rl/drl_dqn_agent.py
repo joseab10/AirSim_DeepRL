@@ -50,7 +50,7 @@ class DRL_DQNAgent:
         self._sess = session
         self._sess.run(tf.global_variables_initializer())
 
-        self._saver = tf.train.Saver()
+        self._saver = tf.train.Saver(max_to_keep=50)
 
         if act_probabilities is None:
             self._act_probabilities = np.ones(num_actions) / num_actions
