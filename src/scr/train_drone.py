@@ -59,9 +59,6 @@ def run_episode(env, agent, deterministic,  do_training=True, do_prefill=False,
         action_id = agent.act(state, deterministic)
         action = env.actid2str(action_id)
 
-        if verbose:
-            print('\tStep ', '{:7d}'.format(step), ' Action: ', action)
-
 
         next_state, reward, terminal = env.step(action_id)
         next_state = state_preprocessing(next_state)
@@ -73,6 +70,9 @@ def run_episode(env, agent, deterministic,  do_training=True, do_prefill=False,
             agent._replay_buffer.add_transition(state, action_id, next_state, reward, terminal)
 
         stats.step(reward, action_id)
+
+        if verbose:
+            print('\tStep ', '{:7d}'.format(step), ' Action: ', action, ' Reward: ', '{:6.2f}'.format(reward), ' AccReward: ', '{:6.2f}'.format(stats.episode_reward))
 
         state = next_state
         
@@ -315,6 +315,7 @@ if __name__ == "__main__":
     # Model
     parser.add_argument('--cfg_dir', action='store', default=default_model_cfg_dir, help='Model Config Directory.')
     parser.add_argument('--cpt_dir', action='store', default=default_model_cpt_dir, help='Model Checkpoint Directory.')
+    parser.add_argument('--cpt_fil', action='store', default=''                   , help='Model Checkpoint.')
     parser.add_argument('--res_dir', action='store', default=default_model_res_dir, help='Model Results Directory.')
     parser.add_argument('--tb_dir' , action='store', default=default_tb_dir       , help='TensorBoard Directory.')
 
@@ -385,8 +386,13 @@ if __name__ == "__main__":
 
     model_ckpt_dir = path.join(args.cpt_dir, model)
     model_ckpt_dir = path.normpath(model_ckpt_dir)
-    model_ckpt = path.join(model_ckpt_dir, 'model.ckpt')
-    model_ckpt = path.normpath(model_ckpt)
+    model_cpt = args.cpt_fil
+
+    if model_cpt == '':
+        model_ckpt = path.join(model_ckpt_dir, 'model.ckpt')
+        model_ckpt = path.normpath(model_ckpt)
+    else:
+        model_ckpt = model_cpt
 
     model_res_dir = path.join(args.res_dir, model)
     model_res_dir = path.normpath(model_res_dir)
