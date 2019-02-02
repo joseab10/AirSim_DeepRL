@@ -310,7 +310,7 @@ if __name__ == "__main__":
 
     parser.add_argument('--df',      action='store', default=0.99, help='Past Rewards Discount Factor.', type=float)
     parser.add_argument('--bs',      action='store', default=100, help='Batch Size.',                   type=int)
-    parser.add_argument('--episodes',action='store', default=10000, help='Maximum Number of Training Episodes.', type=int)
+    parser.add_argument('--episodes',action='store', default=5000, help='Maximum Number of Training Episodes.', type=int)
 
     # Model
     parser.add_argument('--cfg_dir', action='store', default=default_model_cfg_dir, help='Model Config Directory.')
@@ -418,7 +418,7 @@ if __name__ == "__main__":
     tg_names = False
     
     if targets == 'mn_lines':
-        targets = ['SM_PylonA_60M6', 'SM_PylonA_60M5', 'SM_PylonA_60M4', 'SM_PylonA_60M2', 'SM_Transformer2',
+        targets = ['SM_PylonA_60M6', 'SM_PylonA_60M5', 'SM_PylonA_60M4', 'SM_PylonA_60M2', 'SM_Pull_ln_2', 'SM_Transformer2', 'SM_Pull_ln_3',
                    'SM_PylonA_60M2', 'SM_PylonA_60M3', 'SM_PylonA_60M7']
         tg_names = True
     elif targets == 'nh_lines':
