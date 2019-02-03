@@ -1,0 +1,6 @@
+model_checkpoint_path: "model_20190130_073318.ckpt"
+all_model_checkpoint_paths: "model_20190130_021258.ckpt"
+all_model_checkpoint_paths: "model_20190130_035208.ckpt"
+all_model_checkpoint_paths: "model_20190130_051835.ckpt"
+all_model_checkpoint_paths: "model.ckpt"
+all_model_checkpoint_paths: "model_20190130_073318.ckpt"
