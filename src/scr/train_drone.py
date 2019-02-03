@@ -418,7 +418,7 @@ if __name__ == "__main__":
     tg_names = False
     
     if targets == 'mn_lines':
-        targets = ['SM_PylonA_60M6', 'SM_PylonA_60M5', 'SM_PylonA_60M4', 'SM_PylonA_60M2', 'SM_Pull_ln_3', 'SM_Transformer2', 'SM_Pull_ln_3',
+        targets = ['SM_PylonA_60M6', 'SM_PylonA_60M5', 'SM_PylonA_60M4', 'SM_PylonA_60M2', 'SM_Pull_In_13', 'SM_Transformer2',
                    'SM_PylonA_60M2', 'SM_PylonA_60M3', 'SM_PylonA_60M7']
         tg_names = True
     elif targets == 'nh_lines':
