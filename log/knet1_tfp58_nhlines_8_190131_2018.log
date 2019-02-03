@@ -1,0 +1,219 @@
+train_drone.py --train --test --targets nh_lines --double_q --cpt_dir ../../models/cpt/nhlines_8 --tb_dir ../../tensorboard/nhlines_8 --patience 50 --bs 300
+
+Connected!
+Client Ver:1 (Min Req: 1), Server Ver:1 (Min Req: 1)
+
+
+
+***Environment Loaded and API connected***
+/project/ml_ws1819/ml1811/as/lib/python3.5/site-packages/tensorflow/python/ops/gradients_impl.py:95: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+2019-01-31 20:20:17.681296: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.1 instructions, but these are available on your machine and could speed up CPU computations.
+2019-01-31 20:20:17.681316: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.2 instructions, but these are available on your machine and could speed up CPU computations.
+2019-01-31 20:20:17.681320: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use AVX instructions, but these are available on your machine and could speed up CPU computations.
+2019-01-31 20:20:17.681323: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use AVX2 instructions, but these are available on your machine and could speed up CPU computations.
+2019-01-31 20:20:17.681326: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use FMA instructions, but these are available on your machine and could speed up CPU computations.
+
+***Agent instantiated***
+
+
+*** Prefilling Buffer ***
+
+		Maximum number of steps reached (1000) Terminating Episode
+
+Prefill Episode:        1  Reward:  -26725  Buffer Filled:      1001
+		Agent Collision at step     17(penetration: 0.0106)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Prefill Episode:        2  Reward:  -1061  Buffer Filled:      1018
+		Agent Collision at step     30(penetration: 0.0064)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Prefill Episode:        3  Reward:  -801  Buffer Filled:      1048
+		Agent Collision at step     27(penetration: 0.0118)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Prefill Episode:        4  Reward:  -1287  Buffer Filled:      1075
+		Agent Collision at step     17(penetration: 0.0238)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Prefill Episode:        5  Reward:  -2115  Buffer Filled:      1092
+		Agent Collision at step     17(penetration: 0.0000)
+		Agent Collision at step     28(penetration: 0.0000)
+		Agent Collision at step     29(penetration: 0.0000)
+		Agent Collision at step     30(penetration: 0.0014)
+		Agent Collision at step     35(penetration: 0.0009)
+		Maximum number of steps reached (1000) Terminating Episode
+
+Prefill Episode:        6  Reward:  -10388  Buffer Filled:      2093
+		Agent Collision at step     15(penetration: 0.0000)
+		Agent Collision at step     24(penetration: 0.0178)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Prefill Episode:        7  Reward:  -1770  Buffer Filled:      2117
+		Agent Collision at step     16(penetration: 0.0091)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Prefill Episode:        8  Reward:  -918  Buffer Filled:      2133
+		Agent Collision at step     16(penetration: 0.0160)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Prefill Episode:        9  Reward:  -1477  Buffer Filled:      2149
+		Agent Collision at step     25(penetration: 0.0000)
+		Agent Collision at step     29(penetration: 0.0144)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Prefill Episode:       10  Reward:  -1517  Buffer Filled:      2178
+		Agent Collision at step     16(penetration: 0.0005)
+		Agent Collision at step     23(penetration: 0.0000)
+		Agent Collision at step     24(penetration: 0.0009)
+		Agent Collision at step     38(penetration: 0.0222)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Prefill Episode:       11  Reward:  -2423  Buffer Filled:      2216
+		Agent Collision at step     16(penetration: 0.0199)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Prefill Episode:       12  Reward:  -1783  Buffer Filled:      2232
+		Agent Collision at step     19(penetration: 0.0007)
+		Agent Collision at step     30(penetration: 0.0000)
+		Agent Collision at step     36(penetration: 0.0000)
+		Agent Collision at step     40(penetration: 0.0000)
+		Agent Collision at step     42(penetration: 0.0000)
+		Agent Collision at step     43(penetration: 0.0000)
+		Agent Collision at step     44(penetration: 0.0000)
+		Agent Collision at step     51(penetration: 0.0014)
+		Agent Collision at step     79(penetration: 0.0149)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Prefill Episode:       13  Reward:  -2943  Buffer Filled:      2311
+		Agent Collision at step     16(penetration: 0.0148)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Prefill Episode:       14  Reward:  -1377  Buffer Filled:      2327
+		Agent Collision at step     24(penetration: 0.0000)
+		Agent Collision at step     25(penetration: 0.0000)
+		Agent Collision at step     26(penetration: 0.0103)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Prefill Episode:       15  Reward:  -1272  Buffer Filled:      2353
+		Agent Collision at step     16(penetration: 0.0187)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Prefill Episode:       16  Reward:  -1692  Buffer Filled:      2369
+		Agent Collision at step     16(penetration: 0.0284)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Prefill Episode:       17  Reward:  -2469  Buffer Filled:      2385
+		Agent Collision at step     23(penetration: 0.0000)
+		Agent Collision at step     24(penetration: 0.0000)
+		Agent Collision at step     26(penetration: 0.0112)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Prefill Episode:       18  Reward:  -1347  Buffer Filled:      2411
+		Agent Collision at step     16(penetration: 0.0090)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Prefill Episode:       19  Reward:  -913  Buffer Filled:      2427
+		Agent Collision at step     16(penetration: 0.0147)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Prefill Episode:       20  Reward:  -1366  Buffer Filled:      2443
+		Agent Collision at step     16(penetration: 0.0093)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Prefill Episode:       21  Reward:  -935  Buffer Filled:      2459
+		Agent Collision at step     16(penetration: 0.0000)
+		Agent Collision at step     23(penetration: 0.0000)
+		Agent Collision at step     28(penetration: 0.0312)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Prefill Episode:       22  Reward:  -2966  Buffer Filled:      2487
+		Agent Collision at step     23(penetration: 0.0000)
+		Agent Collision at step     29(penetration: 0.0000)
+		Agent Collision at step     42(penetration: 0.0000)
+		Agent Collision at step     51(penetration: 0.0000)
+		Maximum number of steps reached (1000) Terminating Episode
+
+Prefill Episode:       23  Reward:  -10262  Buffer Filled:      3488
+
+*** Training Agent ***
+
+../cls/deep_rl/drl_dqn_agent.py:99: FutureWarning: Using a non-tuple sequence for multidimensional indexing is deprecated; use `arr[tuple(seq)]` instead of `arr[seq]`. In the future this will be interpreted as an array index, `arr[np.array(seq)]`, which will result either in an error or a different result.
+  q_predictions = q_predictions[action_indexes]
+		Agent Collision at step    112(penetration: 0.0711)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode  (v) :        1  Reward:  -6755.5822
+		Agent Collision at step      8(penetration: 0.0486)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :        2  Reward:  -4137.1820
+		Agent Collision at step      7(penetration: 0.0005)
+		Agent Collision at step     10(penetration: 0.0591)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :        3  Reward:  -5379.3387
+		Agent Collision at step      5(penetration: 0.0000)
+		Agent Collision at step      8(penetration: 0.0000)
+		Agent Collision at step    116(penetration: 0.1025)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :        4  Reward:  -9332.3056
+		Agent Collision at step      2(penetration: 0.0000)
+		Agent Collision at step     10(penetration: 0.0000)
+		Agent Collision at step     11(penetration: 0.0000)
+		Agent Collision at step     12(penetration: 0.0051)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :        5  Reward:  -1217.0607
+		Agent Collision at step      6(penetration: 0.0000)
+		Agent Collision at step     15(penetration: 0.0000)
+		Agent Collision at step     20(penetration: 0.0055)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :        6  Reward:  -1394.5553
+		Agent Collision at step      9(penetration: 0.0060)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :        7  Reward:  -850.1024
+		Agent Collision at step      3(penetration: 0.0000)
+		Maximum number of steps reached (1100) Terminating Episode
+
+Episode      :        8  Reward:  -10842.6136
+		Agent Collision at step      4(penetration: 0.0614)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :        9  Reward:  -5031.0398
+		Agent Collision at step      4(penetration: 0.0429)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       10  Reward:  -3746.9196
+		Agent Collision at step      3(penetration: 0.0000)
+		Agent Collision at step      8(penetration: 0.0156)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode  (v) :       11  Reward:  -1767.3002
+		Agent Collision at step      2(penetration: 0.0000)
+		Agent Collision at step      5(penetration: 0.0106)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       12  Reward:  -1204.9967
+		Agent Collision at step      4(penetration: 0.0000)
+		Agent Collision at step     14(penetration: 0.0000)
+		Agent Collision at step     28(penetration: 0.0109)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       13  Reward:  -1947.8131
+		Agent Collision at step   1134(penetration: 0.0960)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       14  Reward:  -18975.0217
+		Agent Collision at step      3(penetration: 0.0430)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       15  Reward:  -3417.8583
+		Agent Collision at step      4(penetration: 0.0038)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       16  Reward:  -132.1897

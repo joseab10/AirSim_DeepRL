@@ -1,0 +1,18 @@
+WARNING:tornado.general:Connect error on fd 7: ECONNREFUSED
+WARNING:tornado.general:Connect error on fd 7: ECONNREFUSED
+WARNING:tornado.general:Connect error on fd 7: ECONNREFUSED
+WARNING:tornado.general:Connect error on fd 7: ECONNREFUSED
+WARNING:tornado.general:Connect error on fd 7: ECONNREFUSED
+WARNING:tornado.general:Connect error on fd 10: ECONNREFUSED
+WARNING:tornado.general:Connect error on fd 10: ECONNREFUSED
+WARNING:tornado.general:Connect error on fd 4: ECONNREFUSED
+WARNING:tornado.general:Connect error on fd 4: ECONNREFUSED
+WARNING:tornado.general:Connect error on fd 4: ECONNREFUSED
+Traceback (most recent call last):
+  File "train_drone.py", line 385, in <module>
+    env = AS_Environment(env=environment, env_path=env_dir,rendering=rendering,stepped_simulation=stepped_simulation)
+  File "../cls/airsim/as_env.py", line 305, in __init__
+    self._start()
+  File "../cls/airsim/as_env.py", line 422, in _start
+    raise ChildProcessError('API not connected')
+ChildProcessError: API not connected

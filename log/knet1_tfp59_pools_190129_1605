@@ -1,0 +1,40 @@
+WARNING:tornado.general:Connect error on fd 7: ECONNREFUSED
+WARNING:tornado.general:Connect error on fd 7: ECONNREFUSED
+WARNING:tornado.general:Connect error on fd 7: ECONNREFUSED
+WARNING:tornado.general:Connect error on fd 7: ECONNREFUSED
+WARNING:tornado.general:Connect error on fd 7: ECONNREFUSED
+2019-01-29 16:10:07.511029: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.1 instructions, but these are available on your machine and could speed up CPU computations.
+2019-01-29 16:10:07.511051: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.2 instructions, but these are available on your machine and could speed up CPU computations.
+2019-01-29 16:10:07.511056: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use AVX instructions, but these are available on your machine and could speed up CPU computations.
+2019-01-29 16:10:07.511059: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use AVX2 instructions, but these are available on your machine and could speed up CPU computations.
+2019-01-29 16:10:07.511062: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use FMA instructions, but these are available on your machine and could speed up CPU computations.
+/project/ml_ws1819/ml1811/as/lib/python3.5/site-packages/tensorflow/python/ops/gradients_impl.py:95: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+Connected!
+Client Ver:1 (Min Req: 1), Server Ver:1 (Min Req: 1)
+
+
+
+***Environment Loaded and API connected***
+
+***Agent instantiated***
+
+
+*** Prefilling Buffer ***
+
+Traceback (most recent call last):
+  File "train_drone.py", line 510, in <module>
+    prefill_buffer(env, agent, max_timesteps=prefill_bs_pc * batch_size, verbose=verbose)
+  File "train_drone.py", line 91, in prefill_buffer
+    max_timesteps=max_timesteps, verbose=verbose)
+  File "train_drone.py", line 60, in run_episode
+    next_state, reward, terminal = env.step(action_id)
+  File "../cls/airsim/as_env.py", line 504, in step
+    yaw_mode=airsim.YawMode(is_rate=True,  yaw_or_rate = action[DroneActIdx.Yaw.value])).join()
+  File "/project/ml_ws1819/ml1811/as/lib/python3.5/site-packages/msgpackrpc/future.py", line 22, in join
+    self._loop.start()
+  File "/project/ml_ws1819/ml1811/as/lib/python3.5/site-packages/msgpackrpc/loop.py", line 22, in start
+    self._ioloop.start()
+  File "/project/ml_ws1819/ml1811/as/lib/python3.5/site-packages/tornado/ioloop.py", line 863, in start
+    event_pairs = self._impl.poll(poll_timeout)
+KeyboardInterrupt

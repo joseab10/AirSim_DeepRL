@@ -1,0 +1,822 @@
+train_drone.py --train --test --targets nh_pools --double_q --cpt_dir ../../models/cpt/nhpools_4 --tb_dir ../../tensorboard/nhpools_4 --patience 50
+
+Connected!
+Client Ver:1 (Min Req: 1), Server Ver:1 (Min Req: 1)
+
+
+
+***Environment Loaded and API connected***
+/project/ml_ws1819/ml1811/as/lib/python3.5/site-packages/tensorflow/python/ops/gradients_impl.py:95: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+2019-01-31 00:33:20.775462: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.1 instructions, but these are available on your machine and could speed up CPU computations.
+2019-01-31 00:33:20.783031: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.2 instructions, but these are available on your machine and could speed up CPU computations.
+2019-01-31 00:33:20.783067: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use AVX instructions, but these are available on your machine and could speed up CPU computations.
+2019-01-31 00:33:20.783073: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use AVX2 instructions, but these are available on your machine and could speed up CPU computations.
+2019-01-31 00:33:20.783077: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use FMA instructions, but these are available on your machine and could speed up CPU computations.
+
+***Agent instantiated***
+
+
+*** Prefilling Buffer ***
+
+		Minimum reward reached (-30000) at step    553. Terminating Episode
+
+Prefill Episode:        1  Reward:  -30123  Buffer Filled:       553
+		Agent Collision at step     17(penetration: 0.0000)
+		Agent Collision at step     28(penetration: 0.0000)
+		Agent Collision at step     29(penetration: 0.0001)
+		Maximum number of steps reached (1000) Terminating Episode
+
+Prefill Episode:        2  Reward:  -9889  Buffer Filled:      1554
+
+*** Training Agent ***
+
+../cls/deep_rl/drl_dqn_agent.py:99: FutureWarning: Using a non-tuple sequence for multidimensional indexing is deprecated; use `arr[tuple(seq)]` instead of `arr[seq]`. In the future this will be interpreted as an array index, `arr[np.array(seq)]`, which will result either in an error or a different result.
+  q_predictions = q_predictions[action_indexes]
+		Agent Collision at step    497(penetration: 0.0013)
+		Minimum reward reached (-30000) at step    597. Terminating Episode
+
+Episode  (v) :        1  Reward:  -30322.8918
+		Minimum reward reached (-30000) at step    120. Terminating Episode
+
+Episode      :        2  Reward:  -30331.2865
+		Agent Collision at step     60(penetration: 0.0000)
+		Agent Collision at step     61(penetration: 0.0000)
+		Agent Collision at step     62(penetration: 0.0000)
+		Agent Collision at step     65(penetration: 0.0000)
+		Agent Collision at step     69(penetration: 0.0000)
+		Agent Collision at step     71(penetration: 0.0000)
+		Agent Collision at step     72(penetration: 0.0004)
+		Agent Collision at step     73(penetration: 0.0000)
+		Agent Collision at step     74(penetration: 0.0000)
+		Agent Collision at step     75(penetration: 0.0000)
+		Agent Collision at step     76(penetration: 0.0000)
+		Agent Collision at step     77(penetration: 0.0000)
+		Agent Collision at step     78(penetration: 0.0000)
+		Agent Collision at step     79(penetration: 0.0000)
+		Agent Collision at step     80(penetration: 0.0000)
+		Agent Collision at step     81(penetration: 0.0000)
+		Agent Collision at step     82(penetration: 0.0000)
+		Agent Collision at step     83(penetration: 0.0000)
+		Agent Collision at step     84(penetration: 0.0000)
+		Agent Collision at step     85(penetration: 0.0000)
+		Agent Collision at step     86(penetration: 0.0000)
+		Agent Collision at step     87(penetration: 0.0000)
+		Agent Collision at step     88(penetration: 0.0000)
+		Agent Collision at step     89(penetration: 0.0000)
+		Agent Collision at step     90(penetration: 0.0000)
+		Agent Collision at step     91(penetration: 0.0000)
+		Agent Collision at step     92(penetration: 0.0000)
+		Agent Collision at step     93(penetration: 0.0000)
+		Agent Collision at step     94(penetration: 0.0000)
+		Agent Collision at step     95(penetration: 0.0000)
+		Agent Collision at step     96(penetration: 0.0000)
+		Agent Collision at step     97(penetration: 0.0000)
+		Agent Collision at step     99(penetration: 0.0003)
+		Agent Collision at step    104(penetration: 0.0000)
+		Agent Collision at step    113(penetration: 0.0000)
+		Agent Collision at step    114(penetration: 0.0000)
+		Agent Collision at step    115(penetration: 0.0000)
+		Agent Collision at step    116(penetration: 0.0000)
+		Agent Collision at step    117(penetration: 0.0000)
+		Agent Collision at step    118(penetration: 0.0000)
+		Agent Collision at step    119(penetration: 0.0000)
+		Agent Collision at step    120(penetration: 0.0000)
+		Agent Collision at step    121(penetration: 0.0000)
+		Agent Collision at step    122(penetration: 0.0000)
+		Agent Collision at step    123(penetration: 0.0000)
+		Agent Collision at step    127(penetration: 0.0000)
+		Agent Collision at step    128(penetration: 0.0000)
+		Agent Collision at step    129(penetration: 0.0000)
+		Agent Collision at step    130(penetration: 0.0000)
+		Agent Collision at step    131(penetration: 0.0000)
+		Agent Collision at step    132(penetration: 0.0000)
+		Agent Collision at step    133(penetration: 0.0000)
+		Agent Collision at step    137(penetration: 0.0000)
+		Agent Collision at step    138(penetration: 0.0000)
+		Agent Collision at step    139(penetration: 0.0000)
+		Agent Collision at step    140(penetration: 0.0000)
+		Agent Collision at step    141(penetration: 0.0000)
+		Agent Collision at step    142(penetration: 0.0000)
+		Agent Collision at step    143(penetration: 0.0000)
+		Agent Collision at step    144(penetration: 0.0000)
+		Agent Collision at step    145(penetration: 0.0000)
+		Agent Collision at step    146(penetration: 0.0000)
+		Agent Collision at step    147(penetration: 0.0000)
+		Agent Collision at step    148(penetration: 0.0000)
+		Agent Collision at step    149(penetration: 0.0000)
+		Agent Collision at step    150(penetration: 0.0000)
+		Agent Collision at step    151(penetration: 0.0000)
+		Agent Collision at step    152(penetration: 0.0000)
+		Agent Collision at step    153(penetration: 0.0000)
+		Agent Collision at step    154(penetration: 0.0000)
+		Agent Collision at step    155(penetration: 0.0000)
+		Agent Collision at step    156(penetration: 0.0000)
+		Agent Collision at step    157(penetration: 0.0000)
+		Agent Collision at step    158(penetration: 0.0000)
+		Agent Collision at step    160(penetration: 0.0000)
+		Agent Collision at step    161(penetration: 0.0000)
+		Agent Collision at step    162(penetration: 0.0000)
+		Agent Collision at step    163(penetration: 0.0000)
+		Agent Collision at step    164(penetration: 0.0000)
+		Agent Collision at step    165(penetration: 0.0000)
+		Agent Collision at step    166(penetration: 0.0000)
+		Agent Collision at step    167(penetration: 0.0000)
+		Agent Collision at step    168(penetration: 0.0000)
+		Agent Collision at step    170(penetration: 0.0000)
+		Agent Collision at step    171(penetration: 0.0000)
+		Minimum reward reached (-30000) at step    525. Terminating Episode
+
+Episode      :        3  Reward:  -30013.9511
+		Agent Collision at step      3(penetration: 0.0000)
+		Agent Collision at step      5(penetration: 0.0000)
+		Agent Collision at step     10(penetration: 0.0000)
+		Agent Collision at step     11(penetration: 0.0014)
+		Agent Collision at step     15(penetration: 0.0133)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :        4  Reward:  -119.9031
+		Agent Collision at step      6(penetration: 0.0028)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :        5  Reward:  829.3292
+		Agent Collision at step      2(penetration: 0.0000)
+		Agent Collision at step      3(penetration: 0.0000)
+		Agent Collision at step      8(penetration: 0.0170)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :        6  Reward:  -292.0834
+		Agent Collision at step      2(penetration: 0.0040)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :        7  Reward:  -166.9335
+		Agent Collision at step      2(penetration: 0.0070)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :        8  Reward:  -408.0141
+		Agent Collision at step      3(penetration: 0.0054)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :        9  Reward:  -249.9622
+		Agent Collision at step      2(penetration: 0.0000)
+		Agent Collision at step      7(penetration: 0.0000)
+		Agent Collision at step      8(penetration: 0.0000)
+		Agent Collision at step      9(penetration: 0.0219)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       10  Reward:  -423.7865
+		Agent Collision at step     10(penetration: 0.0000)
+		Agent Collision at step     13(penetration: 0.0164)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode  (v) :       11  Reward:  -1656.9788
+		Agent Collision at step      2(penetration: 0.0043)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       12  Reward:  -184.7809
+		Agent Collision at step      2(penetration: 0.0031)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       13  Reward:  -86.4360
+		Agent Collision at step      2(penetration: 0.0134)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       14  Reward:  -904.4172
+		Agent Collision at step      2(penetration: 0.0045)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       15  Reward:  -210.8562
+		Agent Collision at step      2(penetration: 0.0094)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       16  Reward:  -602.3220
+		Agent Collision at step      2(penetration: 0.0000)
+		Agent Collision at step      4(penetration: 0.0000)
+		Agent Collision at step      6(penetration: 0.0000)
+		Agent Collision at step      7(penetration: 0.0000)
+		Agent Collision at step      8(penetration: 0.0105)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       17  Reward:  -312.8670
+		Agent Collision at step      2(penetration: 0.0000)
+		Agent Collision at step     11(penetration: 0.0000)
+		Agent Collision at step     12(penetration: 0.0096)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       18  Reward:  323.6356
+		Agent Collision at step      2(penetration: 0.0000)
+		Agent Collision at step      9(penetration: 0.0000)
+		Agent Collision at step     10(penetration: 0.0172)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       19  Reward:  -211.4600
+		Agent Collision at step      2(penetration: 0.0000)
+		Agent Collision at step      8(penetration: 0.0000)
+		Agent Collision at step     20(penetration: 0.0000)
+		Agent Collision at step    940(penetration: 0.1498)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       20  Reward:  -22436.8494
+		Agent Collision at step      6(penetration: 0.0014)
+		Agent Collision at step      8(penetration: 0.0000)
+		Agent Collision at step      9(penetration: 0.0097)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode  (v) :       21  Reward:  -540.1267
+		Agent Collision at step      5(penetration: 0.0000)
+		Agent Collision at step      6(penetration: 0.0000)
+		Agent Collision at step     13(penetration: 0.0000)
+		Agent Collision at step     25(penetration: 0.0229)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       22  Reward:  -1535.7934
+		Agent Collision at step     10(penetration: 0.0000)
+		Agent Collision at step     18(penetration: 0.0017)
+		Agent Collision at step     19(penetration: 0.0128)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       23  Reward:  -2620.5568
+		Agent Collision at step      9(penetration: 0.0209)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       24  Reward:  -1865.1116
+		Agent Collision at step      6(penetration: 0.0000)
+		Agent Collision at step      9(penetration: 0.0072)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       25  Reward:  -262.9342
+		Agent Collision at step     10(penetration: 0.0044)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       26  Reward:  -1131.0620
+		Agent Collision at step      3(penetration: 0.0000)
+		Agent Collision at step      5(penetration: 0.0052)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       27  Reward:  7.5287
+		Agent Collision at step      5(penetration: 0.0043)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       28  Reward:  143.1163
+		Agent Collision at step      5(penetration: 0.0115)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       29  Reward:  -444.8105
+		Agent Collision at step      9(penetration: 0.0000)
+		Agent Collision at step     11(penetration: 0.0196)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       30  Reward:  -811.9598
+		Agent Collision at step      4(penetration: 0.0037)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode  (v) :       31  Reward:  189.1950
+		Agent Collision at step      4(penetration: 0.0084)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       32  Reward:  -137.7780
+		Agent Collision at step      5(penetration: 0.0154)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       33  Reward:  -731.1730
+		Agent Collision at step     10(penetration: 0.0126)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       34  Reward:  -363.5609
+		Agent Collision at step      6(penetration: 0.0114)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       35  Reward:  -304.6705
+		Agent Collision at step      5(penetration: 0.0000)
+		Agent Collision at step      6(penetration: 0.0047)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       36  Reward:  118.4165
+		Agent Collision at step      8(penetration: 0.0000)
+		Agent Collision at step     19(penetration: 0.0013)
+		Agent Collision at step     20(penetration: 0.0000)
+		Agent Collision at step     21(penetration: 0.0000)
+		Agent Collision at step     22(penetration: 0.0000)
+		Agent Collision at step     23(penetration: 0.0000)
+		Agent Collision at step     24(penetration: 0.0119)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       37  Reward:  -2814.0654
+		Agent Collision at step     11(penetration: 0.0000)
+		Agent Collision at step     14(penetration: -0.0006)
+		Agent Collision at step     15(penetration: 0.0191)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       38  Reward:  -1969.6609
+		Agent Collision at step     10(penetration: 0.0000)
+		Agent Collision at step     11(penetration: 0.0618)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       39  Reward:  -5987.8648
+		Agent Collision at step      7(penetration: 0.0161)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       40  Reward:  -724.5200
+		Agent Collision at step      3(penetration: 0.0000)
+		Agent Collision at step      4(penetration: 0.0130)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode  (v) :       41  Reward:  -560.2683
+		Agent Collision at step      4(penetration: 0.0098)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       42  Reward:  -349.5959
+		Agent Collision at step      4(penetration: 0.0158)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       43  Reward:  -781.6193
+		Agent Collision at step      5(penetration: 0.0045)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       44  Reward:  160.8609
+		Agent Collision at step      4(penetration: 0.0288)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       45  Reward:  -1771.9594
+		Agent Collision at step      5(penetration: 0.0000)
+		Agent Collision at step      6(penetration: 0.0166)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       46  Reward:  -963.0225
+		Agent Collision at step      5(penetration: 0.0040)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       47  Reward:  374.8629
+		Agent Collision at step      4(penetration: 0.0048)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       48  Reward:  148.5788
+		Agent Collision at step      4(penetration: 0.0070)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       49  Reward:  -69.0526
+		Agent Collision at step      4(penetration: 0.0000)
+		Agent Collision at step      5(penetration: 0.0000)
+		Agent Collision at step      6(penetration: 0.0000)
+		Agent Collision at step      7(penetration: 0.0034)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       50  Reward:  -5.9520
+		Agent Collision at step      5(penetration: 0.0000)
+		Agent Collision at step      6(penetration: 0.0000)
+		Agent Collision at step      9(penetration: 0.0000)
+		Agent Collision at step     14(penetration: 0.0000)
+		Agent Collision at step     19(penetration: 0.0000)
+		Agent Collision at step     20(penetration: 0.0000)
+		Agent Collision at step     31(penetration: 0.0000)
+		Agent Collision at step     37(penetration: 0.0055)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode  (v) :       51  Reward:  -2105.2121
+		Agent Collision at step      7(penetration: 0.0000)
+		Agent Collision at step      9(penetration: 0.0000)
+		Agent Collision at step     10(penetration: 0.0021)
+		Agent Collision at step     11(penetration: 0.0007)
+		Agent Collision at step     12(penetration: 0.0083)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       52  Reward:  -144.4169
+		Agent Collision at step      6(penetration: 0.0103)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       53  Reward:  13.5882
+		Agent Collision at step      2(penetration: 0.0142)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       54  Reward:  -978.4807
+		Agent Collision at step      2(penetration: 0.0000)
+		Agent Collision at step      4(penetration: 0.0000)
+		Agent Collision at step      6(penetration: 0.0000)
+		Agent Collision at step    989(penetration: 0.0000)
+		Agent Collision at step    990(penetration: 0.1019)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       55  Reward:  -17407.2087
+		Agent Collision at step      3(penetration: 0.0000)
+		Agent Collision at step      9(penetration: 0.0099)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       56  Reward:  -1036.2789
+		Agent Collision at step      4(penetration: 0.0000)
+		Agent Collision at step      5(penetration: 0.0000)
+		Agent Collision at step     18(penetration: 0.0065)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       57  Reward:  -2610.5572
+		Agent Collision at step     13(penetration: 0.0183)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       58  Reward:  -2114.4246
+		Agent Collision at step      3(penetration: 0.0000)
+		Agent Collision at step      5(penetration: 0.0008)
+		Agent Collision at step     12(penetration: 0.0252)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       59  Reward:  -1901.6198
+		Agent Collision at step      5(penetration: 0.0000)
+		Agent Collision at step      6(penetration: 0.0028)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       60  Reward:  759.9257
+		Agent Collision at step      7(penetration: 0.0113)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode  (v) :       61  Reward:  166.6514
+		Agent Collision at step      4(penetration: 0.0017)
+		Agent Collision at step      5(penetration: 0.0000)
+		Agent Collision at step      6(penetration: 0.0000)
+		Agent Collision at step     10(penetration: 0.0000)
+		Agent Collision at step     11(penetration: 0.0000)
+		Agent Collision at step     12(penetration: 0.0000)
+		Agent Collision at step     13(penetration: 0.0493)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       62  Reward:  -3330.0402
+		Agent Collision at step      3(penetration: 0.0000)
+		Agent Collision at step      5(penetration: 0.0000)
+		Agent Collision at step      7(penetration: 0.0004)
+		Agent Collision at step     14(penetration: 0.0000)
+		Agent Collision at step     15(penetration: 0.0013)
+		Agent Collision at step     18(penetration: 0.0147)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       63  Reward:  -82.1957
+		Agent Collision at step      5(penetration: 0.0000)
+		Agent Collision at step      6(penetration: 0.0000)
+		Agent Collision at step     11(penetration: 0.0000)
+		Agent Collision at step     13(penetration: 0.0017)
+		Agent Collision at step     14(penetration: 0.0000)
+		Agent Collision at step     15(penetration: 0.0000)
+		Agent Collision at step     18(penetration: 0.0000)
+		Agent Collision at step     20(penetration: 0.0030)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       64  Reward:  -1105.1946
+		Agent Collision at step      6(penetration: 0.0017)
+		Agent Collision at step      9(penetration: 0.0000)
+		Agent Collision at step     11(penetration: 0.0000)
+		Agent Collision at step     15(penetration: 0.0000)
+		Agent Collision at step     16(penetration: 0.0000)
+		Agent Collision at step     17(penetration: 0.0000)
+		Agent Collision at step     19(penetration: 0.0064)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       65  Reward:  -1902.4087
+		Agent Collision at step      5(penetration: 0.0000)
+		Agent Collision at step      6(penetration: 0.0000)
+		Agent Collision at step      7(penetration: 0.0000)
+		Agent Collision at step     12(penetration: 0.0000)
+		Agent Collision at step     17(penetration: 0.0000)
+		Agent Collision at step     28(penetration: 0.0000)
+		Agent Collision at step     29(penetration: 0.0000)
+		Agent Collision at step     30(penetration: 0.0000)
+		Agent Collision at step     33(penetration: 0.0023)
+		Agent Collision at step     36(penetration: 0.1715)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       66  Reward:  -14865.3453
+		Agent Collision at step      4(penetration: 0.0076)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       67  Reward:  318.4940
+		Agent Collision at step      6(penetration: 0.0000)
+		Agent Collision at step      9(penetration: 0.0071)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       68  Reward:  516.1145
+		Agent Collision at step      5(penetration: 0.0000)
+		Agent Collision at step     10(penetration: 0.0000)
+		Agent Collision at step     14(penetration: 0.0000)
+		Agent Collision at step     17(penetration: 0.0000)
+		Agent Collision at step     18(penetration: 0.0096)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       69  Reward:  -1495.5213
+		Agent Collision at step      6(penetration: 0.0000)
+		Agent Collision at step      7(penetration: 0.0000)
+		Agent Collision at step     11(penetration: 0.0026)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       70  Reward:  897.6407
+		Agent Collision at step      3(penetration: 0.0000)
+		Agent Collision at step      4(penetration: 0.0000)
+		Agent Collision at step      5(penetration: 0.0070)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode  (v) :       71  Reward:  654.3519
+		Agent Collision at step      3(penetration: 0.0000)
+		Agent Collision at step      6(penetration: 0.1267)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       72  Reward:  -8832.3032
+		Agent Collision at step      3(penetration: 0.0000)
+		Agent Collision at step     10(penetration: 0.0198)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       73  Reward:  -1695.5109
+		Agent Collision at step      5(penetration: 0.0070)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       74  Reward:  564.9428
+		Agent Collision at step      3(penetration: 0.0000)
+		Agent Collision at step      4(penetration: 0.0000)
+		Agent Collision at step      7(penetration: 0.0000)
+		Agent Collision at step      8(penetration: 0.0014)
+		Agent Collision at step     16(penetration: 0.0000)
+		Agent Collision at step     17(penetration: 0.0000)
+		Agent Collision at step     18(penetration: 0.0000)
+		Agent Collision at step     19(penetration: 0.0000)
+		Agent Collision at step     20(penetration: 0.0000)
+		Agent Collision at step     21(penetration: 0.0000)
+		Agent Collision at step     22(penetration: 0.0000)
+		Agent Collision at step     23(penetration: 0.0000)
+		Agent Collision at step     24(penetration: 0.0000)
+		Agent Collision at step     25(penetration: 0.0000)
+		Agent Collision at step     27(penetration: 0.0000)
+		Agent Collision at step     28(penetration: 0.0097)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       75  Reward:  -2196.9136
+		Agent Collision at step      4(penetration: 0.0000)
+		Agent Collision at step      5(penetration: 0.0000)
+		Agent Collision at step      7(penetration: 0.0000)
+		Agent Collision at step      8(penetration: 0.0000)
+		Agent Collision at step     12(penetration: 0.0099)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       76  Reward:  195.6826
+		Agent Collision at step      7(penetration: 0.0000)
+		Agent Collision at step     10(penetration: 0.0000)
+		Agent Collision at step     20(penetration: 0.0098)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       77  Reward:  -2949.4579
+		Agent Collision at step      7(penetration: 0.0048)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       78  Reward:  237.0259
+		Agent Collision at step      2(penetration: 0.0000)
+		Agent Collision at step     16(penetration: 0.0000)
+		Agent Collision at step     17(penetration: 0.0000)
+		Agent Collision at step     18(penetration: 0.0000)
+		Agent Collision at step     19(penetration: 0.0000)
+		Agent Collision at step     20(penetration: 0.0000)
+		Agent Collision at step     24(penetration: 0.0068)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       79  Reward:  -4027.0440
+		Agent Collision at step      5(penetration: 0.0000)
+		Agent Collision at step      6(penetration: 0.0000)
+		Agent Collision at step      7(penetration: 0.0000)
+		Agent Collision at step      8(penetration: 0.0012)
+		Agent Collision at step      9(penetration: 0.0000)
+		Agent Collision at step     10(penetration: 0.0000)
+		Agent Collision at step     14(penetration: 0.0130)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       80  Reward:  -1005.7925
+		Agent Collision at step      5(penetration: 0.0000)
+		Agent Collision at step     17(penetration: 0.0000)
+		Agent Collision at step     19(penetration: 0.0136)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode  (v) :       81  Reward:  297.7671
+		Agent Collision at step      9(penetration: 0.0108)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       82  Reward:  -256.8941
+		Agent Collision at step      5(penetration: 0.0000)
+		Agent Collision at step      9(penetration: 0.0159)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       83  Reward:  109.6098
+		Agent Collision at step     12(penetration: 0.0019)
+		Agent Collision at step     17(penetration: 0.0229)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       84  Reward:  -2107.9784
+		Agent Collision at step      3(penetration: 0.0084)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       85  Reward:  -78.9125
+		Agent Collision at step      6(penetration: 0.0000)
+		Agent Collision at step      7(penetration: 0.0000)
+		Agent Collision at step      8(penetration: 0.0000)
+		Agent Collision at step      9(penetration: 0.0000)
+		Agent Collision at step     10(penetration: 0.0000)
+		Agent Collision at step     13(penetration: 0.0000)
+		Agent Collision at step     14(penetration: 0.0000)
+		Agent Collision at step     20(penetration: 0.0061)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       86  Reward:  96.1058
+		Agent Collision at step    429(penetration: 0.0000)
+		Agent Collision at step    445(penetration: 0.0000)
+		Agent Collision at step    456(penetration: 0.0072)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       87  Reward:  -6477.3912
+		Agent Collision at step      9(penetration: 0.0000)
+		Agent Collision at step     16(penetration: 0.0200)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       88  Reward:  -734.5991
+		Agent Collision at step     34(penetration: 0.0064)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       89  Reward:  391.7637
+		Agent Collision at step      6(penetration: 0.0120)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       90  Reward:  236.3677
+		Agent Collision at step     47(penetration: 0.0039)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode  (v) :       91  Reward:  236.1012
+		Agent Collision at step     64(penetration: 0.0003)
+		Agent Collision at step    259(penetration: 0.0000)
+		Agent Collision at step    260(penetration: 0.0000)
+		Agent Collision at step    261(penetration: 0.0690)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       92  Reward:  -9684.7044
+		Agent Collision at step     13(penetration: 0.0292)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       93  Reward:  -3131.1976
+		Agent Collision at step     15(penetration: 0.0000)
+		Agent Collision at step     16(penetration: 0.0000)
+		Agent Collision at step    109(penetration: 0.0000)
+		Agent Collision at step    110(penetration: 0.0053)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       94  Reward:  -3453.1533
+		Agent Collision at step     21(penetration: 0.0000)
+		Agent Collision at step     23(penetration: 0.0000)
+		Agent Collision at step     24(penetration: 0.0389)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       95  Reward:  -3456.4138
+		Agent Collision at step     52(penetration: 0.0000)
+		Agent Collision at step     56(penetration: 0.0000)
+		Agent Collision at step     61(penetration: 0.0000)
+		Agent Collision at step     65(penetration: 0.0160)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       96  Reward:  -3695.7385
+		Agent Collision at step     40(penetration: 0.0103)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       97  Reward:  -1124.2574
+		Agent Collision at step    109(penetration: 0.0001)
+		Agent Collision at step    110(penetration: 0.0000)
+		Agent Collision at step    114(penetration: 0.0197)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :       98  Reward:  -5255.2437
+		Agent Collision at step    190(penetration: 0.0000)
+		Agent Collision at step    234(penetration: 0.0000)
+		Agent Collision at step    235(penetration: 0.0000)
+		Agent Collision at step    236(penetration: 0.0000)
+		Agent Collision at step    245(penetration: 0.0022)
+		Agent Collision at step    247(penetration: 0.0000)
+		Agent Collision at step    248(penetration: 0.0005)
+		Agent Collision at step    254(penetration: 0.0000)
+		Agent Collision at step    255(penetration: 0.0000)
+		Agent Collision at step    256(penetration: 0.0000)
+		Agent Collision at step    257(penetration: 0.0000)
+		Agent Collision at step    258(penetration: 0.0000)
+		Agent Collision at step    259(penetration: 0.0000)
+		Agent Collision at step    260(penetration: 0.0000)
+		Agent Collision at step    261(penetration: 0.0000)
+		Agent Collision at step    262(penetration: 0.0000)
+		Agent Collision at step    263(penetration: 0.0000)
+		Agent Collision at step    264(penetration: 0.0000)
+		Agent Collision at step    265(penetration: 0.0000)
+		Agent Collision at step    266(penetration: 0.0000)
+		Agent Collision at step    267(penetration: 0.0000)
+		Agent Collision at step    268(penetration: 0.0000)
+		Agent Collision at step    269(penetration: 0.0000)
+		Agent Collision at step    272(penetration: 0.0000)
+		Agent Collision at step    273(penetration: 0.0000)
+		Agent Collision at step    274(penetration: 0.0000)
+		Agent Collision at step    276(penetration: 0.0000)
+		Agent Collision at step    284(penetration: 0.0000)
+		Agent Collision at step    288(penetration: 0.0000)
+		Minimum reward reached (-30000) at step    427. Terminating Episode
+
+Episode      :       99  Reward:  -32483.3507
+		Agent Collision at step      5(penetration: 0.0005)
+		Agent Collision at step      6(penetration: 0.0103)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :      100  Reward:  -717.7253
+		Agent Collision at step      6(penetration: 0.0000)
+		Agent Collision at step      8(penetration: 0.0000)
+		Agent Collision at step     10(penetration: 0.0000)
+		Agent Collision at step     11(penetration: 0.0000)
+		Agent Collision at step    908(penetration: 0.0204)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode  (v) :      101  Reward:  -15579.7625
+		Minimum reward reached (-30000) at step    818. Terminating Episode
+
+Episode      :      102  Reward:  -31402.6565
+		Agent Collision at step      5(penetration: 0.0000)
+		Minimum reward reached (-30000) at step    567. Terminating Episode
+
+Episode      :      103  Reward:  -30734.0256
+		Agent Collision at step     28(penetration: 0.0000)
+		Minimum reward reached (-30000) at step    768. Terminating Episode
+
+Episode      :      104  Reward:  -30332.6894
+		Minimum reward reached (-30000) at step    384. Terminating Episode
+
+Episode      :      105  Reward:  -30129.4213
+		Agent Collision at step      9(penetration: 0.0000)
+		Agent Collision at step     10(penetration: 0.0000)
+		Agent Collision at step     91(penetration: 0.0000)
+		Agent Collision at step     92(penetration: 0.0105)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :      106  Reward:  -3024.3727
+		Agent Collision at step      6(penetration: 0.0000)
+		Minimum reward reached (-30000) at step    953. Terminating Episode
+
+Episode      :      107  Reward:  -30126.0755
+		Minimum reward reached (-30000) at step    848. Terminating Episode
+
+Episode      :      108  Reward:  -31427.2336
+		Agent Collision at step    575(penetration: 0.0000)
+		Minimum reward reached (-30000) at step   1067. Terminating Episode
+
+Episode      :      109  Reward:  -32092.8640
+		Minimum reward reached (-30000) at step   1034. Terminating Episode
+
+Episode      :      110  Reward:  -33473.7303
+		Agent Collision at step     66(penetration: 0.0433)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode  (v) :      111  Reward:  -4216.7729
+		Agent Collision at step     58(penetration: 0.0062)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :      112  Reward:  -1310.8674
+		Agent Collision at step    120(penetration: 0.0068)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :      113  Reward:  -1806.2269
+		Agent Collision at step     69(penetration: 0.0095)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :      114  Reward:  -1534.2613
+		Agent Collision at step     39(penetration: 0.0000)
+		Agent Collision at step     41(penetration: 0.0298)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :      115  Reward:  -2906.8986
+		Agent Collision at step   1406(penetration: 0.0040)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :      116  Reward:  -14436.8163
+		Agent Collision at step    228(penetration: 0.0000)
+		Agent Collision at step    231(penetration: 0.0003)
+		Agent Collision at step    233(penetration: 0.0199)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :      117  Reward:  -4253.5631
+		Agent Collision at step     27(penetration: 0.0074)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :      118  Reward:  -958.3958
+		Agent Collision at step    412(penetration: 0.0021)
+		Agent Collision at step    422(penetration: 0.0098)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :      119  Reward:  -5255.7891
+		Agent Collision at step     45(penetration: 0.0075)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :      120  Reward:  -1142.1054
+		Agent Collision at step     60(penetration: 0.0000)
+		Agent Collision at step    223(penetration: 0.0126)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode  (v) :      121  Reward:  -3422.1978
+		Agent Collision at step    623(penetration: 0.0000)
+		Agent Collision at step    628(penetration: 0.0000)
+		Agent Collision at step    641(penetration: 0.0446)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :      122  Reward:  -10259.8504
+		Agent Collision at step     56(penetration: 0.0000)
+		Agent Collision at step     58(penetration: 0.0666)
+		Max Collision force: 0.0025 exceeded. Terminating Episode
+
+Episode      :      123  Reward:  -5962.3826
+		Agent Collision at step     21(penetration: 0.0000)

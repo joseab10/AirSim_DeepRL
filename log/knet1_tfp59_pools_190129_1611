@@ -1,0 +1,4 @@
+  File "train_drone.py", line 415
+    elif: targets == 'nh_pools':
+        ^
+SyntaxError: invalid syntax
