@@ -29,7 +29,7 @@ where:
 
 - `--render` toggles graphical rendering.
 
-- `--verbose` toggles printing each idividual action to stdout.
+- `--verbose` toggles printing each individual action to stdout.
 
 - `--model <net_name>` defines the name (without file extension) of the network configuration.
 
